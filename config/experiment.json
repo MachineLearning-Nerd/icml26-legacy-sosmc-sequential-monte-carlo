@@ -1,6 +1,6 @@
 {
-  "stage": "claim_4_wallclock",
-  "accepted_claims": [2, 3, 4],
+  "stage": "claim_5_2d",
+  "accepted_claims": [2, 3, 4, 5],
   "seed": 20260726,
-  "description": "Official Table 2 wall-clock reproduction for ImpDiff, SOUL, and SOSMC-ULA; cumulative exact checks for Claims 2-3."
+  "description": "Official checkpointed three-dataset 2D EBM suite at beta=0.25 plus beta=5 control; cumulative exact checks for Claims 2-4."
 }

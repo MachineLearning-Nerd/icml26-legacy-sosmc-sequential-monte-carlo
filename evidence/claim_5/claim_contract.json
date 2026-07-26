@@ -1,0 +1,27 @@
+{
+  "claim": 5,
+  "paper_anchor": [
+    "Section 5.2, paragraph S5.SS2.p4.7",
+    "Appendix E.2.2, paragraphs A5.SS2.SSS0.P2.p13 and p15",
+    "Figures 2, 3, 14, 15, and 16"
+  ],
+  "exact_statement": "Across datasets, half-plane rewards, and regularisation strengths, SOSMC-ULA reaches higher objective contours for small beta_KL and comparable objective values for large beta_KL; its weighted particle reward closely tracks the fresh expected reward, unlike the potentially biased ImpDiff particle reward.",
+  "tested_scope": {
+    "datasets": ["circles", "two_moons", "blobs"],
+    "reward": "R_lower(x)=1{x_2<0}",
+    "small_beta_KL": 0.25,
+    "small_beta_seeds": [0, 1, 2],
+    "large_beta_KL_control": 5.0,
+    "large_beta_dataset": "circles",
+    "methods": ["ImpDiff", "SOSMC-ULA"],
+    "particles": 10000,
+    "outer_iterations": 1001
+  },
+  "preregistered_acceptance": {
+    "small_beta": "The paired 95% confidence interval for best-objective SOSMC-minus-ImpDiff is strictly positive across the nine dataset/seed pairs, and the mean difference is positive for each dataset.",
+    "tracking": "The pooled RMSE between SOSMC weighted particle reward and fresh reward is lower than the corresponding ImpDiff unweighted-particle RMSE at non-initial evaluation points.",
+    "large_beta": "The absolute difference between best objectives at beta_KL=5 on circles is at most 0.05.",
+    "negative_control": "Swapping SOSMC and ImpDiff labels must fail the small-beta directional test."
+  },
+  "verdict_rule": "VERIFIED only if every preregistered check passes; otherwise BLOCKED. This scoped experiment does not quantify every reward/beta panel in Figure 3."
+}

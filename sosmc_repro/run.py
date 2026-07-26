@@ -6,6 +6,7 @@ import sys
 import time
 from pathlib import Path
 
+from sosmc_repro.ebm2d import run_2d_suite
 from sosmc_repro.io import ARTIFACTS, ROOT, provenance, write_json, write_text
 from sosmc_repro.langevin import run_wallclock
 from sosmc_repro.theory import verify_equation_19, verify_proposition_1
@@ -28,8 +29,10 @@ def main() -> int:
         2: verify_proposition_1(),
         3: verify_equation_19(seed),
     }
-    if config["stage"] == "claim_4_wallclock":
+    if config["stage"] in {"claim_4_wallclock", "claim_5_2d"}:
         results[4] = run_wallclock()
+    if config["stage"] == "claim_5_2d":
+        results[5] = run_2d_suite()
     for claim, result in results.items():
         claim_dir = ARTIFACTS / f"claim_{claim}"
         claim_dir.mkdir(parents=True, exist_ok=True)
@@ -38,9 +41,12 @@ def main() -> int:
         write_json(
             claim_dir / "independent_checker_output.json",
             {
-                "checker": "exact rational grid plus symbolic identities"
-                if claim == 2
-                else "symbolic Gaussian integration plus independent Monte Carlo",
+                "checker": {
+                    2: "exact rational grid plus symbolic identities",
+                    3: "symbolic Gaussian integration plus independent Monte Carlo",
+                    4: "independent paired-seed wall-clock comparison",
+                    5: "independent objective, tracking-error, and large-beta checks",
+                }[claim],
                 "passed": result["passed"],
                 "details": result,
             },
@@ -60,18 +66,23 @@ def main() -> int:
     claim_1_dir = ARTIFACTS / "claim_1"
     claim_1_dir.mkdir(parents=True, exist_ok=True)
     copy_contract(1, claim_1_dir)
-    write_json(
-        claim_1_dir / "raw_output.json",
-        {
-            "verdict": "BLOCKED",
-            "reason": "The baseline contains the exact algorithm contract but no faithful EBM execution trace yet.",
-            "passed": False,
-        },
-    )
+    claim_1_trace_available = 5 in results
+    claim_1_result = {
+        "verdict": "BLOCKED",
+        "reason": (
+            "The official SOSMC-ULA notebook was executed on checkpointed EBMs, "
+            "but this node does not yet trace particle identity and independently "
+            "recompute the particle gradient required by the frozen Claim 1 contract."
+            if claim_1_trace_available
+            else "The exact algorithm contract is frozen; a faithful EBM execution trace is required."
+        ),
+        "passed": False,
+    }
+    write_json(claim_1_dir / "raw_output.json", claim_1_result)
     write_text(
         claim_1_dir / "EVAL.md",
-        "# Claim 1 evaluation\n\nVerdict: **BLOCKED**\n\n"
-        "The exact contract is frozen; a faithful EBM execution trace is required.\n",
+        f"# Claim 1 evaluation\n\nVerdict: **{claim_1_result['verdict']}**\n\n"
+        f"{claim_1_result['reason']}\n",
     )
 
     summary = {
