@@ -17,9 +17,12 @@ An independent checker compares best objectives by paired dataset/seed,
 computes particle-to-fresh RMSE, evaluates the large-beta control, and swaps
 method labels as a negative control.
 
-Fresh evaluation uses the authors' documented reduced chain: 1,000 samples,
-5,000 ULA steps, and 500 burn-in steps. Runtime calibration on the required
-CPU backend showed that five evaluations per method would exceed the four-hour
-job cap. Three full-length evaluations are therefore taken over 1,001 outer
-iterations, so tracking is observed at start, midpoint, and endpoint (steps
-0, 500, and 1000).
+Fresh evaluation uses 500 samples, 2,000 ULA steps, and 200 burn-in steps.
+Runtime calibration on the required CPU backend showed that even the authors'
+documented reduced evaluator (1,000 samples, 5,000 steps, 500 burn-in) took
+about 36 minutes to reach the first step-0 progress record, making the
+six-method suite impossible within the four-hour job cap. Three bounded
+evaluations are taken over 1,001 outer iterations, so tracking is observed at
+start, midpoint, and endpoint (steps 0, 500, and 1000). This evaluator
+substitution is treated as a material uncertainty and must be sensitivity
+checked before a final Claim 5 acceptance.

@@ -62,14 +62,14 @@ def _trial_config(
         "noise_scale_sosmc": 1.0,
         "ess_resample_ratio": 0.9,
         "ess_adapt_ratio": 0.95,
-        # The official notebook's documented reduced-evaluation setting uses
-        # a 5,000-step chain with 500 burn-in steps. Start/mid/end evaluations
-        # retain trajectory-wide information within the CPU job cap.
+        # CPU runtime calibration showed the authors' 5,000-step/1,000-chain
+        # reduced evaluator still exceeds the four-hour cap. Preserve the
+        # exact tuning algorithm and use a declared bounded fresh evaluator.
         "n_eval_fresh": 500,
-        "eval_n_samples": 1_000,
-        "eval_langevin_steps": 5_000,
+        "eval_n_samples": 500,
+        "eval_langevin_steps": 2_000,
         "eval_thin": 1,
-        "eval_burn_in": 500,
+        "eval_burn_in": 200,
         "eval_step_size": 5e-3,
         "eval_noise_scale": 1.0,
         "eval_clamp_value": None,
@@ -201,9 +201,9 @@ def run_2d_suite() -> dict[str, Any]:
             "n_particles": 10_000,
             "n_outer_steps": 1_001,
             "fresh_eval_frequency": 500,
-            "fresh_eval_samples": 1_000,
-            "fresh_eval_langevin_steps": 5_000,
-            "fresh_eval_burn_in": 500,
+            "fresh_eval_samples": 500,
+            "fresh_eval_langevin_steps": 2_000,
+            "fresh_eval_burn_in": 200,
             "checkpoint_device_override": "cpu",
         },
         "trial_metadata": trial_metadata,
