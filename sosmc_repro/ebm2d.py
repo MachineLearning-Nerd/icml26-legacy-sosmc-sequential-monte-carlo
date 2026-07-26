@@ -118,6 +118,26 @@ def _rows(
 def run_2d_suite() -> dict[str, Any]:
     started = time.perf_counter()
     namespace = execute_cells(NOTEBOOK, DEFINITION_CELLS)
+    official_load_trainer = namespace["load_trainer"]
+
+    def load_trainer_cpu(
+        root_dir: str | Path,
+        experiment_name: str,
+        checkpoint: str | int | Path = "latest",
+        device: str | None = None,
+    ) -> Any:
+        del device
+        return official_load_trainer(
+            root_dir,
+            experiment_name,
+            checkpoint=checkpoint,
+            device="cpu",
+        )
+
+    # The supplied checkpoint configs store the authors' original CUDA device.
+    # Use their loader's documented device override to enforce this campaign's
+    # CPU-only compute contract without altering checkpoint content.
+    namespace["load_trainer"] = load_trainer_cpu
     run_trial = namespace["run_experimental_trial"]
     reward_fn = namespace["reward_lower_halfplane"]
     rows: list[dict[str, Any]] = []
@@ -185,6 +205,7 @@ def run_2d_suite() -> dict[str, Any]:
             "fresh_eval_samples": 1_000,
             "fresh_eval_langevin_steps": 5_000,
             "fresh_eval_burn_in": 500,
+            "checkpoint_device_override": "cpu",
         },
         "trial_metadata": trial_metadata,
         "raw_rows": rows,

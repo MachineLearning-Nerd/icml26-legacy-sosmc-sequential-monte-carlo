@@ -2,6 +2,9 @@
 
 - The experiment uses the authors' supplied pretrained EBM checkpoints rather
   than repeating the 200-epoch PCD pretraining.
+- The saved checkpoint configs specify CUDA. They are loaded with the
+  notebook's documented `device="cpu"` override to satisfy the campaign's
+  CPU-only compute contract.
 - The lower-half-plane reward is tested on all three datasets; the upper,
   left, and right panels are not part of this first benchmark node.
 - Three seeds are used at `beta_KL=0.25`; the large-beta control at

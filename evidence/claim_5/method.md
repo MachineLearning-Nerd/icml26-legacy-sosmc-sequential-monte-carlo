@@ -6,6 +6,11 @@ at upstream commit `62e4f8f07ae2705073388f5d2c4babf5c87b00be`. It calls the
 notebook's own `run_experimental_trial` function and loads the supplied
 `checkpoint_latest.pt` for each dataset.
 
+The saved upstream `config.json` files record the authors' original CUDA
+device. The verifier passes `device="cpu"` through the notebook's documented
+`load_trainer` override; model architecture, weights, optimiser state, data,
+and all scientific hyperparameters are unchanged.
+
 At each fresh-evaluation iteration, raw evidence records reward, quadrature KL,
 the paper's objective `reward - beta_KL * KL`, and the particle estimate.
 An independent checker compares best objectives by paired dataset/seed,
