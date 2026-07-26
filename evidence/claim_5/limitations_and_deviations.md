@@ -7,10 +7,14 @@
   CPU-only compute contract.
 - The lower-half-plane reward is tested on all three datasets; the upper,
   left, and right panels are not part of this first benchmark node.
-- Three seeds are used at `beta_KL=0.25`; the large-beta control at
-  `beta_KL=5` uses circles and seed 0.
+- This runtime-calibrated shard uses seed 0 at `beta_KL=0.25`; the large-beta
+  control at `beta_KL=5` also uses circles and seed 0. The parent three-seed
+  design was cancelled after runtime calibration projected 6–7 hours against
+  a fixed 4-hour job cap, before any method endpoint was observed.
 - The paper's illustrative fresh evaluation uses 20,000 ULA steps and 15,000
   burn-in steps. This run uses the authors' own reduced-evaluation setting of
   5,000 and 500, respectively.
 - A passing result is direct evidence for the scoped contract, not a claim
   that every panel of the paper's full dataset/reward/beta grid was rerun.
+- The cumulative runner intentionally does not accept Claim 5 from this
+  single-seed shard.

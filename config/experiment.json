@@ -1,6 +1,6 @@
 {
   "stage": "claim_5_2d",
-  "accepted_claims": [2, 3, 4, 5],
+  "accepted_claims": [2, 3, 4],
   "seed": 20260726,
-  "description": "Official checkpointed three-dataset 2D EBM suite at beta=0.25 plus beta=5 control; cumulative exact checks for Claims 2-4."
+  "description": "Runtime-calibrated seed-0 shard of the official checkpointed three-dataset 2D EBM suite; beta=0.25 plus beta=5 circles control. Claim 5 is measured but not accepted from one seed."
 }

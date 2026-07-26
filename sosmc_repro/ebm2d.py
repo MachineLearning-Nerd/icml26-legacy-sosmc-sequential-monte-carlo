@@ -25,7 +25,7 @@ DATASETS = {
     "two_moons": "ebm_two_moons",
     "blobs": "ebm_blobs",
 }
-SMALL_BETA_SEEDS = [0, 1, 2]
+SMALL_BETA_SEEDS = [0]
 
 
 def _trial_config(

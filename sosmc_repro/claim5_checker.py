@@ -7,7 +7,10 @@ from typing import Any
 
 SMALL_BETA = 0.25
 LARGE_BETA = 5.0
-T_CRITICAL_DF8_95 = 2.306
+T_CRITICAL_95 = {
+    2: 4.303,
+    8: 2.306,
+}
 
 
 def _rmse(rows: list[dict[str, Any]], field: str) -> float:
@@ -41,9 +44,10 @@ def evaluate(rows: list[dict[str, Any]]) -> dict[str, Any]:
     paired_mean = statistics.fmean(paired_differences)
     paired_sd = statistics.stdev(paired_differences)
     paired_se = paired_sd / math.sqrt(len(paired_differences))
+    t_critical = T_CRITICAL_95[len(paired_differences) - 1]
     paired_ci = [
-        paired_mean - T_CRITICAL_DF8_95 * paired_se,
-        paired_mean + T_CRITICAL_DF8_95 * paired_se,
+        paired_mean - t_critical * paired_se,
+        paired_mean + t_critical * paired_se,
     ]
 
     per_dataset_direction = {
@@ -120,6 +124,7 @@ def evaluate(rows: list[dict[str, Any]]) -> dict[str, Any]:
             "mean": paired_mean,
             "sd": paired_sd,
             "ci95": paired_ci,
+            "t_critical": t_critical,
         },
         "per_dataset_positive_mean_advantage": per_dataset_direction,
         "tracking": tracking,

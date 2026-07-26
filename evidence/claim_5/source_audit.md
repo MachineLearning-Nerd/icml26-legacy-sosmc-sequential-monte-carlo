@@ -19,7 +19,9 @@ indicator rewards. The illustrative setting uses `beta_KL=0.25` and 1,001
 outer iterations; the supplied notebook also defines `beta_KL=5` as its
 large-regularisation endpoint.
 
-The paper's prose is empirical rather than universally quantified. This node
-tests all three named datasets but only the lower-half-plane reward, three
-seeds at small beta, and one large-beta control. Broader reward/beta coverage
-therefore remains a stated limitation even if the scoped contract passes.
+The paper's prose is empirical rather than universally quantified. This
+runtime-calibrated node tests all three named datasets but only the
+lower-half-plane reward, seed 0 at small beta, and one large-beta control.
+It is an evidence shard, not a sufficient multi-seed acceptance result.
+Broader reward/beta and stochastic replication therefore remain stated
+limitations even if the scoped checker passes.
