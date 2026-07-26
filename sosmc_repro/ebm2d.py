@@ -63,9 +63,9 @@ def _trial_config(
         "ess_resample_ratio": 0.9,
         "ess_adapt_ratio": 0.95,
         # The official notebook's documented reduced-evaluation setting uses
-        # a 5,000-step chain with 500 burn-in steps. Five evaluations retain
-        # trajectory information over the 1,001 outer iterations.
-        "n_eval_fresh": 250,
+        # a 5,000-step chain with 500 burn-in steps. Start/mid/end evaluations
+        # retain trajectory-wide information within the CPU job cap.
+        "n_eval_fresh": 500,
         "eval_n_samples": 1_000,
         "eval_langevin_steps": 5_000,
         "eval_thin": 1,
@@ -200,7 +200,7 @@ def run_2d_suite() -> dict[str, Any]:
             "large_beta_control": "not run in this runtime-bounded shard",
             "n_particles": 10_000,
             "n_outer_steps": 1_001,
-            "fresh_eval_frequency": 250,
+            "fresh_eval_frequency": 500,
             "fresh_eval_samples": 1_000,
             "fresh_eval_langevin_steps": 5_000,
             "fresh_eval_burn_in": 500,

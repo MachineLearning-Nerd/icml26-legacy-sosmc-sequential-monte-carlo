@@ -18,5 +18,8 @@ computes particle-to-fresh RMSE, evaluates the large-beta control, and swaps
 method labels as a negative control.
 
 Fresh evaluation uses the authors' documented reduced chain: 1,000 samples,
-5,000 ULA steps, and 500 burn-in steps. Five evaluations are taken over 1,001
-outer iterations so tracking is observed at steps 0, 250, 500, 750, and 1000.
+5,000 ULA steps, and 500 burn-in steps. Runtime calibration on the required
+CPU backend showed that five evaluations per method would exceed the four-hour
+job cap. Three full-length evaluations are therefore taken over 1,001 outer
+iterations, so tracking is observed at start, midpoint, and endpoint (steps
+0, 500, and 1000).
