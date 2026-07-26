@@ -1,0 +1,7 @@
+{
+  "stage": "theory_baseline",
+  "accepted_claims": [2, 3],
+  "seed": 20260726,
+  "description": "Exact proof-certificate calibration for Proposition 1 and Equation 19; Claim 1 remains blocked pending a faithful EBM execution trace."
+}
+

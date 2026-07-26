@@ -1,0 +1,17 @@
+{
+  "claim_id": 3,
+  "paper_anchor": "Section 4.2, Equation 19",
+  "source_correction": "The exact Gaussian exponential ESS identity is Equation 19. Propositions 2-4 give separate local chi-squared expansions.",
+  "assumptions": [
+    "pi_theta is Gaussian N(theta, Sigma) with common positive-definite Sigma.",
+    "theta_k-theta_{k-1} = -gamma grad l(theta_{k-1}).",
+    "The idealized ESS proxy is rho=N/(1+chi^2(pi_theta_k||pi_theta_{k-1}))."
+  ],
+  "conclusion": "rho_k(gamma)=N exp(-gamma^2 ||grad l(theta_{k-1})||^2_{Sigma^{-1}}).",
+  "acceptance": [
+    "Symbolically derive the equal-covariance Gaussian chi-squared identity.",
+    "Independently estimate it in multiple dimensions and nonspherical covariances.",
+    "Negative control must reject an unequal-covariance extension."
+  ]
+}
+

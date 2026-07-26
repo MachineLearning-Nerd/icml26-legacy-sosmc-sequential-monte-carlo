@@ -1,0 +1,43 @@
+{
+  "dataset": {
+    "name": "two_moons",
+    "n_samples": 20000,
+    "noise": 0.08,
+    "scale": 2.2,
+    "seed": 0,
+    "circles_factor": 0.5,
+    "blobs_n_centers": 4,
+    "blobs_cluster_std": 0.8
+  },
+  "model": {
+    "hidden_dim": 128,
+    "depth": 4,
+    "init_std": 0.02
+  },
+  "sampler": {
+    "n_steps_train": 80,
+    "n_steps_eval": 200,
+    "step_size": 0.005,
+    "noise_scale": 1.0,
+    "clamp_value": 6.0
+  },
+  "training": {
+    "batch_size": 512,
+    "epochs": 500,
+    "lr": 0.0002,
+    "replay_size": 20000,
+    "replay_reinit_prob": 0.05,
+    "particle_init_lim": 4.5,
+    "energy_decay": 0.001,
+    "grad_penalty_weight": 0.2,
+    "grad_clip_norm": 10.0,
+    "plot_every": 25,
+    "plot_n_samples": 5000,
+    "save_every": 50,
+    "log_every": 1,
+    "device": "cuda",
+    "seed": 0
+  },
+  "output_dir": "ebm_experiments",
+  "experiment_name": "ebm_two_moons"
+}
