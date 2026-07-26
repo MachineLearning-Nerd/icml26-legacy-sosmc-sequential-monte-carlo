@@ -1,7 +1,6 @@
 {
-  "stage": "theory_baseline",
-  "accepted_claims": [2, 3],
+  "stage": "claim_4_wallclock",
+  "accepted_claims": [2, 3, 4],
   "seed": 20260726,
-  "description": "Exact proof-certificate calibration for Proposition 1 and Equation 19; Claim 1 remains blocked pending a faithful EBM execution trace."
+  "description": "Official Table 2 wall-clock reproduction for ImpDiff, SOUL, and SOSMC-ULA; cumulative exact checks for Claims 2-3."
 }
-

@@ -42,15 +42,30 @@ def git_sha() -> str:
     ).strip()
 
 
+def cpu_allocation() -> dict[str, Any]:
+    allocation: dict[str, Any] = {
+        "os_cpu_count": os.cpu_count(),
+        "affinity_count": None,
+        "cgroup_quota_cores": None,
+    }
+    if hasattr(os, "sched_getaffinity"):
+        allocation["affinity_count"] = len(os.sched_getaffinity(0))
+    cpu_max = Path("/sys/fs/cgroup/cpu.max")
+    if cpu_max.exists():
+        quota, period = cpu_max.read_text(encoding="utf-8").split()
+        if quota != "max":
+            allocation["cgroup_quota_cores"] = int(quota) / int(period)
+    return allocation
+
+
 def provenance(started: float, seed: int) -> dict[str, Any]:
     return {
         "git_sha": git_sha(),
         "seed": seed,
         "python": platform.python_version(),
         "platform": platform.platform(),
-        "cpu_logical_allocation": os.cpu_count(),
+        "cpu_allocation": cpu_allocation(),
         "runtime_seconds": time.perf_counter() - started,
         "cuda_visible": False,
         "device_policy": "CPU only",
     }
-

@@ -7,6 +7,7 @@ import time
 from pathlib import Path
 
 from sosmc_repro.io import ARTIFACTS, ROOT, provenance, write_json, write_text
+from sosmc_repro.langevin import run_wallclock
 from sosmc_repro.theory import verify_equation_19, verify_proposition_1
 
 
@@ -23,10 +24,12 @@ def main() -> int:
     seed = int(config["seed"])
     ARTIFACTS.mkdir(parents=True, exist_ok=True)
 
-    results = {
+    results: dict[int, dict] = {
         2: verify_proposition_1(),
         3: verify_equation_19(seed),
     }
+    if config["stage"] == "claim_4_wallclock":
+        results[4] = run_wallclock()
     for claim, result in results.items():
         claim_dir = ARTIFACTS / f"claim_{claim}"
         claim_dir.mkdir(parents=True, exist_ok=True)
@@ -44,7 +47,7 @@ def main() -> int:
         )
         write_json(
             claim_dir / "negative_control_output.json",
-            result["negative_controls"],
+            result.get("negative_controls", result.get("independent_checker", {}).get("negative_control", {})),
         )
         write_json(claim_dir / "runtime.json", provenance(started, seed))
         write_text(
@@ -85,10 +88,11 @@ def main() -> int:
         + "\n".join(f"- Claim {k}: **{v['verdict']}**" for k, v in results.items())
         + f"\n\nAccepted checks passed: `{str(summary['all_accepted_passed']).lower()}`\n",
     )
-    print(json.dumps(summary, indent=2, sort_keys=True))
+    print("BEGIN_FULL_MACHINE_READABLE_RESULTS")
+    print(json.dumps({"summary": summary, "claim_results": results}, indent=2, sort_keys=True))
+    print("END_FULL_MACHINE_READABLE_RESULTS")
     return 0 if summary["all_accepted_passed"] else 1
 
 
 if __name__ == "__main__":
     sys.exit(main())
-
