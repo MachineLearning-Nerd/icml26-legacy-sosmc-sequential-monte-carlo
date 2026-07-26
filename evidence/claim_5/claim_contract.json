@@ -11,8 +11,7 @@
     "reward": "R_lower(x)=1{x_2<0}",
     "small_beta_KL": 0.25,
     "small_beta_seeds": [0],
-    "large_beta_KL_control": 5.0,
-    "large_beta_dataset": "circles",
+    "large_beta_KL_control": "deferred to a child node after runtime calibration",
     "methods": ["ImpDiff", "SOSMC-ULA"],
     "particles": 10000,
     "outer_iterations": 1001
@@ -20,8 +19,7 @@
   "preregistered_acceptance": {
     "small_beta": "For this seed-0 evidence shard, the paired cross-dataset 95% confidence interval for best-objective SOSMC-minus-ImpDiff is strictly positive, and the difference is positive for each dataset. This is not a stochastic multi-seed interval.",
     "tracking": "The pooled RMSE between SOSMC weighted particle reward and fresh reward is lower than the corresponding ImpDiff unweighted-particle RMSE at non-initial evaluation points.",
-    "large_beta": "The absolute difference between best objectives at beta_KL=5 on circles is at most 0.05.",
     "negative_control": "Swapping SOSMC and ImpDiff labels must fail the small-beta directional test."
   },
-  "verdict_rule": "The shard checker reports VERIFIED only if every scoped check passes; otherwise BLOCKED. Claim 5 is not accepted by the cumulative runner from one seed alone. This scoped experiment does not quantify every reward/beta panel in Figure 3."
+  "verdict_rule": "This small-beta shard remains BLOCKED for the full claim even if its small-beta and tracking checks pass, because the large-beta control is split into a child node. Claim 5 is not accepted by the cumulative runner from one seed alone."
 }

@@ -81,15 +81,21 @@ def evaluate(rows: list[dict[str, Any]]) -> dict[str, Any]:
     )
 
     large_best: dict[str, float] = {}
-    for method in ("ImpDiff", "SOSMC-ULA"):
-        values = [
-            float(row["objective"])
-            for row in large
-            if row["method"] == method
-        ]
-        large_best[method] = max(values)
-    large_gap = large_best["SOSMC-ULA"] - large_best["ImpDiff"]
-    large_comparable = abs(large_gap) <= 0.05
+    if large:
+        for method in ("ImpDiff", "SOSMC-ULA"):
+            values = [
+                float(row["objective"])
+                for row in large
+                if row["method"] == method
+            ]
+            large_best[method] = max(values)
+        large_gap: float | None = (
+            large_best["SOSMC-ULA"] - large_best["ImpDiff"]
+        )
+        large_comparable: bool | None = abs(large_gap) <= 0.05
+    else:
+        large_gap = None
+        large_comparable = None
 
     # Negative control: swapping the algorithm labels must break the
     # pre-registered small-beta directional result.
@@ -102,13 +108,13 @@ def evaluate(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "sosmc_weighted_tracking_rmse_below_impdiff_unweighted": tracking_better,
         "large_beta_best_objectives_within_0p05": large_comparable,
     }
-    passed = (
+    small_beta_and_tracking_passed = (
         checks["small_beta_positive_mean_advantage"]
         and all(per_dataset_direction.values())
         and tracking_better
-        and large_comparable
         and negative_control_failed_as_intended
     )
+    passed = small_beta_and_tracking_passed and large_comparable is True
     return {
         "verdict": "VERIFIED" if passed else "BLOCKED",
         "scope": {
@@ -129,11 +135,13 @@ def evaluate(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "per_dataset_positive_mean_advantage": per_dataset_direction,
         "tracking": tracking,
         "large_beta_control": {
+            "run": bool(large),
             "best_objectives": large_best,
             "sosmc_minus_impdiff": large_gap,
             "absolute_comparability_threshold": 0.05,
         },
         "checks": checks,
+        "small_beta_and_tracking_passed": small_beta_and_tracking_passed,
         "negative_control": {
             "reversed_label_direction_passed": reversed_direction,
             "failed_as_intended": negative_control_failed_as_intended,

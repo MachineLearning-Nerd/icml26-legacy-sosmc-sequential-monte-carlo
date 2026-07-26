@@ -7,10 +7,13 @@
   CPU-only compute contract.
 - The lower-half-plane reward is tested on all three datasets; the upper,
   left, and right panels are not part of this first benchmark node.
-- This runtime-calibrated shard uses seed 0 at `beta_KL=0.25`; the large-beta
-  control at `beta_KL=5` also uses circles and seed 0. The parent three-seed
-  design was cancelled after runtime calibration projected 6–7 hours against
-  a fixed 4-hour job cap, before any method endpoint was observed.
+- This runtime-calibrated shard uses seed 0 at `beta_KL=0.25`. The parent
+  three-seed design was cancelled after runtime calibration projected 6–7
+  hours against a fixed 4-hour job cap, before any method endpoint was
+  observed. A subsequent eight-method design was also cancelled before an
+  endpoint when a second calibration projected more than four hours.
+- The `beta_KL=5` circles control is split into a child node so the six
+  small-beta methods fit within one job's four-hour cap.
 - The paper's illustrative fresh evaluation uses 20,000 ULA steps and 15,000
   burn-in steps. This run uses the authors' own reduced-evaluation setting of
   5,000 and 500, respectively.

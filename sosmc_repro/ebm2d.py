@@ -151,7 +151,6 @@ def run_2d_suite() -> dict[str, Any]:
             for dataset, alias in DATASETS.items()
             for seed in SMALL_BETA_SEEDS
         ]
-        specifications.append(("circles", DATASETS["circles"], 0, 5.0))
         for dataset, alias, seed, beta_kl in specifications:
             trial_started = time.perf_counter()
             config = _trial_config(reward_fn, alias, seed, beta_kl)
@@ -198,7 +197,7 @@ def run_2d_suite() -> dict[str, Any]:
             "reward": "lower_halfplane",
             "small_beta": 0.25,
             "small_beta_seeds": SMALL_BETA_SEEDS,
-            "large_beta_control": 5.0,
+            "large_beta_control": "not run in this runtime-bounded shard",
             "n_particles": 10_000,
             "n_outer_steps": 1_001,
             "fresh_eval_frequency": 250,
