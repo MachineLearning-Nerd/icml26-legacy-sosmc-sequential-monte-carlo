@@ -21,7 +21,7 @@ NOTEBOOK = (
 NOTEBOOK_DIR = NOTEBOOK.parent
 DEFINITION_CELLS = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
 DATASETS = {
-    "two_moons": "ebm_two_moons",
+    "blobs": "ebm_blobs",
 }
 SMALL_BETA_SEEDS = [0]
 TRUTH_GRID_LIMIT = 6.0
