@@ -127,6 +127,78 @@ def _install_grid_truth_evaluator(namespace: dict[str, Any]) -> None:
     namespace["SOSMCULARewardTuner"]._eval_fresh = evaluate_grid
 
 
+def _install_paired_reference_particle_cache(
+    namespace: dict[str, Any],
+) -> dict[str, Any]:
+    """Reuse one exact reference draw only for an identical paired setup."""
+    torch = namespace["torch"]
+    original = namespace["generate_langevin_samples_from_energy"]
+    cached_particles = None
+    cached_state = None
+    cached_sampler_config = None
+    stats: dict[str, Any] = {
+        "cache_misses": 0,
+        "cache_hits": 0,
+        "reference_parameters_bitwise_equal": None,
+        "sampler_configuration_equal": None,
+    }
+    sampler_fields = (
+        "n_samples",
+        "n_steps",
+        "step_size",
+        "noise_scale",
+        "clamp_value",
+        "particle_init_lim",
+        "device",
+    )
+
+    def paired_generator(*args: Any, **kwargs: Any) -> Any:
+        nonlocal cached_particles, cached_state, cached_sampler_config
+        is_reference_initialization = (
+            not args
+            and int(kwargs.get("n_samples", -1)) == 10_000
+            and int(kwargs.get("n_steps", -1)) == 20_000
+        )
+        if not is_reference_initialization:
+            return original(*args, **kwargs)
+
+        sampler_config = {
+            field: kwargs.get(field) for field in sampler_fields
+        }
+        model = kwargs["energy_model"]
+        state = {
+            name: value.detach().cpu().clone()
+            for name, value in model.state_dict().items()
+        }
+        if cached_particles is None:
+            stats["cache_misses"] += 1
+            cached_particles = original(*args, **kwargs).detach().clone()
+            cached_state = state
+            cached_sampler_config = sampler_config
+            return cached_particles.clone()
+
+        sampler_equal = sampler_config == cached_sampler_config
+        state_equal = (
+            state.keys() == cached_state.keys()
+            and all(
+                torch.equal(state[name], cached_state[name])
+                for name in state
+            )
+        )
+        stats["sampler_configuration_equal"] = sampler_equal
+        stats["reference_parameters_bitwise_equal"] = state_equal
+        if not sampler_equal or not state_equal:
+            raise RuntimeError(
+                "Refusing paired-particle reuse: reference model or sampler "
+                "configuration differs."
+            )
+        stats["cache_hits"] += 1
+        return cached_particles.clone()
+
+    namespace["generate_langevin_samples_from_energy"] = paired_generator
+    return stats
+
+
 def _rows(
     history: dict[str, Any],
     dataset: str,
@@ -188,6 +260,7 @@ def run_2d_suite() -> dict[str, Any]:
     # CPU-only compute contract without altering checkpoint content.
     namespace["load_trainer"] = load_trainer_cpu
     _install_grid_truth_evaluator(namespace)
+    reference_cache = _install_paired_reference_particle_cache(namespace)
     run_trial = namespace["run_experimental_trial"]
     reward_fn = namespace["reward_lower_halfplane"]
     rows: list[dict[str, Any]] = []
@@ -256,6 +329,7 @@ def run_2d_suite() -> dict[str, Any]:
             "truth_grid_resolution": TRUTH_GRID_RESOLUTION,
             "truth_grid_batch": TRUTH_GRID_BATCH,
             "fresh_eval_sampling_error": 0.0,
+            "paired_reference_particle_cache": reference_cache,
             "checkpoint_device_override": "cpu",
         },
         "trial_metadata": trial_metadata,
