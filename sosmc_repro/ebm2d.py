@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import hashlib
 import os
 import time
 from pathlib import Path
 from typing import Any
 
+from sosmc_repro.claim1_checker import evaluate as evaluate_algorithm1
 from sosmc_repro.claim5_checker import evaluate
 from sosmc_repro.io import ROOT
 from sosmc_repro.notebook_loader import execute_cells
@@ -32,6 +34,172 @@ TRUTH_GRID_VARIANTS = {
     "resolution_600_limit_6": (600, 6.0),
     "resolution_400_limit_8": (400, 8.0),
 }
+
+
+def _tensor_sha256(tensor: Any) -> str:
+    array = tensor.detach().contiguous().cpu().numpy()
+    return hashlib.sha256(array.tobytes()).hexdigest()
+
+
+def _weight_summary(weights: Any) -> dict[str, float]:
+    return {
+        "sum": float(weights.sum().item()),
+        "min": float(weights.min().item()),
+        "max": float(weights.max().item()),
+        "std": float(weights.std(unbiased=False).item()),
+        "ess": float(1.0 / weights.square().sum().item()),
+    }
+
+
+def _install_algorithm1_trace(
+    namespace: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Trace the official EBM SOSMC loop and independently check its gradient."""
+    torch = namespace["torch"]
+    tuner_class = namespace["SOSMCULARewardTuner"]
+    normalized_weights = namespace["normalized_weights_from_logA"]
+    original_init = tuner_class.__init__
+    original_step = tuner_class.step
+    original_compute = tuner_class._compute_losses_on_xk
+    original_propose = tuner_class._propose_and_alpha_forward
+    original_resample = tuner_class._resample_if_needed
+    registry: list[dict[str, Any]] = []
+
+    def traced_init(self: Any, *args: Any, **kwargs: Any) -> None:
+        original_init(self, *args, **kwargs)
+        self._orx_algorithm1_trace = {
+            "implementation": (
+                "official SOSMCULARewardTuner from the vendored authors' "
+                "2D EBM notebook"
+            ),
+            "n_particles": int(self.cfg.n_particles),
+            "outer_iterations_configured": int(self.cfg.n_outer_steps),
+            "iterations": [],
+            "gradient_checks": [],
+        }
+        self._orx_trace_entry = None
+        self._orx_proposal_calls = 0
+        registry.append(self._orx_algorithm1_trace)
+
+    def traced_propose(
+        self: Any, x_old: Any, gamma_k: float
+    ) -> tuple[Any, Any]:
+        self._orx_proposal_calls += 1
+        return original_propose(self, x_old, gamma_k)
+
+    def traced_compute(
+        self: Any, x_model: Any, w: Any
+    ) -> tuple[Any, Any, Any, dict[str, Any]]:
+        loss_total, loss_rew, loss_kl, logs = original_compute(
+            self, x_model, w
+        )
+        entry = self._orx_trace_entry
+        if entry is None:
+            return loss_total, loss_rew, loss_kl, logs
+
+        params = [p for p in self.energy.parameters() if p.requires_grad]
+        actual = torch.autograd.grad(
+            loss_total,
+            params,
+            retain_graph=True,
+            allow_unused=False,
+        )
+        x_independent = x_model.detach()
+        w_independent = w.detach().view(-1)
+        reward = self.reward_fn(x_independent).detach().view(-1)
+        energy = self.energy(x_independent).view(-1)
+        with torch.no_grad():
+            energy_ref = self.energy_ref(x_independent).view(-1)
+            delta = energy.detach() - energy_ref
+            centered_delta = delta - (w_independent * delta).sum()
+            centered_reward = reward - (w_independent * reward).sum()
+            coefficients = w_independent * (
+                centered_reward
+                + float(self.cfg.beta_kl) * centered_delta
+            )
+        independently_reconstructed_loss = (
+            coefficients.detach() * energy
+        ).sum()
+        independent = torch.autograd.grad(
+            independently_reconstructed_loss,
+            params,
+            retain_graph=False,
+            allow_unused=False,
+        )
+        actual_flat = torch.cat([value.reshape(-1) for value in actual])
+        independent_flat = torch.cat(
+            [value.reshape(-1) for value in independent]
+        )
+        difference = actual_flat - independent_flat
+        relative_l2 = (
+            difference.norm()
+            / actual_flat.norm().clamp_min(
+                torch.finfo(actual_flat.dtype).eps
+            )
+        )
+        self._orx_algorithm1_trace["gradient_checks"].append(
+            {
+                "outer_iteration": int(entry["outer_iteration"]),
+                "parameter_count": int(actual_flat.numel()),
+                "actual_gradient_l2": float(actual_flat.norm().item()),
+                "independent_gradient_l2": float(
+                    independent_flat.norm().item()
+                ),
+                "relative_l2_error": float(relative_l2.item()),
+                "max_absolute_error": float(
+                    difference.abs().max().item()
+                ),
+                "independent_formula": (
+                    "sum_i w_i * ((r_i-E_w[r]) + "
+                    "beta*(delta_i-E_w[delta])) * grad_theta E_i"
+                ),
+            }
+        )
+        return loss_total, loss_rew, loss_kl, logs
+
+    def traced_resample(
+        self: Any, x_new: Any, log_a_new: Any
+    ) -> tuple[Any, Any, float]:
+        entry = self._orx_trace_entry
+        if entry is not None:
+            weights = normalized_weights(log_a_new).detach()
+            entry["candidate_weights"] = _weight_summary(weights)
+        result = original_resample(self, x_new, log_a_new)
+        if entry is not None:
+            entry["resampled"] = bool(
+                torch.count_nonzero(result[1]).item() == 0
+                and torch.count_nonzero(log_a_new).item() > 0
+            )
+        return result
+
+    def traced_step(self: Any, k: int) -> None:
+        if int(k) >= 3:
+            original_step(self, k)
+            return
+        pre_weights = normalized_weights(self.logA).detach()
+        entry: dict[str, Any] = {
+            "outer_iteration": int(k),
+            "pre_particle_sha256": _tensor_sha256(self.particles),
+            "pre_log_weight_sha256": _tensor_sha256(self.logA),
+            "pre_weights": _weight_summary(pre_weights),
+        }
+        proposal_calls_before = self._orx_proposal_calls
+        self._orx_trace_entry = entry
+        original_step(self, k)
+        self._orx_trace_entry = None
+        entry["proposal_calls"] = (
+            self._orx_proposal_calls - proposal_calls_before
+        )
+        entry["post_particle_sha256"] = _tensor_sha256(self.particles)
+        entry["post_log_weight_sha256"] = _tensor_sha256(self.logA)
+        self._orx_algorithm1_trace["iterations"].append(entry)
+
+    tuner_class.__init__ = traced_init
+    tuner_class._propose_and_alpha_forward = traced_propose
+    tuner_class._compute_losses_on_xk = traced_compute
+    tuner_class._resample_if_needed = traced_resample
+    tuner_class.step = traced_step
+    return registry
 
 
 def _trial_config(
@@ -299,6 +467,7 @@ def run_2d_suite() -> dict[str, Any]:
     namespace["load_trainer"] = load_trainer_cpu
     _install_grid_truth_evaluator(namespace)
     reference_cache = _install_paired_reference_particle_cache(namespace)
+    algorithm1_registry = _install_algorithm1_trace(namespace)
     run_trial = namespace["run_experimental_trial"]
     reward_fn = namespace["reward_lower_halfplane"]
     rows: list[dict[str, Any]] = []
@@ -362,6 +531,39 @@ def run_2d_suite() -> dict[str, Any]:
         os.chdir(previous_cwd)
 
     checker = evaluate(rows)
+    if len(algorithm1_registry) != len(trial_metadata):
+        raise RuntimeError(
+            "Expected one official SOSMC trace for every 2D EBM trial."
+        )
+    algorithm1_traces = []
+    for trace in algorithm1_registry:
+        trace["reference_initialization"] = reference_cache
+        trace["official_notebook_sha256"] = (
+            "8b3938b65467238b07860caa071b7f3cb48eb5a77aab1a0292a32a0ee599c514"
+        )
+        trace["upstream_commit"] = (
+            "62e4f8f07ae2705073388f5d2c4babf5c87b00be"
+        )
+        algorithm1_traces.append(
+            {
+                "raw_trace": trace,
+                "independent_checker": evaluate_algorithm1(trace),
+            }
+        )
+    algorithm1_passed = all(
+        trace["independent_checker"]["passed"]
+        for trace in algorithm1_traces
+    )
+    algorithm1_result = {
+        "claim": "Section 3.2 Algorithm 1 on the official 2D EBM",
+        "verdict": "VERIFIED" if algorithm1_passed else "BLOCKED",
+        "passed": algorithm1_passed,
+        "trials": algorithm1_traces,
+        "negative_controls": [
+            trace["independent_checker"]["negative_control"]
+            for trace in algorithm1_traces
+        ],
+    }
     return {
         "claim": "Section 5.2 checkpointed 2D EBM reward tuning",
         "verdict": checker["verdict"],
@@ -388,6 +590,7 @@ def run_2d_suite() -> dict[str, Any]:
         "trial_metadata": trial_metadata,
         "raw_rows": rows,
         "independent_checker": checker,
+        "algorithm1_result": algorithm1_result,
         "runtime_seconds": time.perf_counter() - started,
         "passed": checker["passed"],
     }

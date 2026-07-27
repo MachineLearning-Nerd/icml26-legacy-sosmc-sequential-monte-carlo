@@ -33,6 +33,7 @@ def main() -> int:
         results[4] = run_wallclock()
     if config["stage"] == "claim_5_2d":
         results[5] = run_2d_suite()
+        results[1] = results[5]["algorithm1_result"]
     for claim, result in results.items():
         claim_dir = ARTIFACTS / f"claim_{claim}"
         claim_dir.mkdir(parents=True, exist_ok=True)
@@ -42,6 +43,7 @@ def main() -> int:
             claim_dir / "independent_checker_output.json",
             {
                 "checker": {
+                    1: "official EBM trace plus independent weighted-gradient reconstruction",
                     2: "exact rational grid plus symbolic identities",
                     3: "symbolic Gaussian integration plus independent Monte Carlo",
                     4: "independent paired-seed wall-clock comparison",
@@ -63,27 +65,25 @@ def main() -> int:
             f"Passed: `{str(result['passed']).lower()}`\n",
         )
 
-    claim_1_dir = ARTIFACTS / "claim_1"
-    claim_1_dir.mkdir(parents=True, exist_ok=True)
-    copy_contract(1, claim_1_dir)
-    claim_1_trace_available = 5 in results
-    claim_1_result = {
-        "verdict": "BLOCKED",
-        "reason": (
-            "The official SOSMC-ULA notebook was executed on checkpointed EBMs, "
-            "but this node does not yet trace particle identity and independently "
-            "recompute the particle gradient required by the frozen Claim 1 contract."
-            if claim_1_trace_available
-            else "The exact algorithm contract is frozen; a faithful EBM execution trace is required."
-        ),
-        "passed": False,
-    }
-    write_json(claim_1_dir / "raw_output.json", claim_1_result)
-    write_text(
-        claim_1_dir / "EVAL.md",
-        f"# Claim 1 evaluation\n\nVerdict: **{claim_1_result['verdict']}**\n\n"
-        f"{claim_1_result['reason']}\n",
-    )
+    if 1 not in results:
+        claim_1_dir = ARTIFACTS / "claim_1"
+        claim_1_dir.mkdir(parents=True, exist_ok=True)
+        copy_contract(1, claim_1_dir)
+        claim_1_result = {
+            "verdict": "BLOCKED",
+            "reason": (
+                "The exact algorithm contract is frozen; a faithful EBM "
+                "execution trace is required."
+            ),
+            "passed": False,
+        }
+        write_json(claim_1_dir / "raw_output.json", claim_1_result)
+        write_text(
+            claim_1_dir / "EVAL.md",
+            "# Claim 1 evaluation\n\n"
+            f"Verdict: **{claim_1_result['verdict']}**\n\n"
+            f"{claim_1_result['reason']}\n",
+        )
 
     summary = {
         "stage": config["stage"],
