@@ -9,6 +9,7 @@ from pathlib import Path
 from sosmc_repro.ebm2d import run_2d_suite
 from sosmc_repro.io import ARTIFACTS, ROOT, provenance, write_json, write_text
 from sosmc_repro.langevin import run_wallclock
+from sosmc_repro.mnist import run_mnist_suite
 from sosmc_repro.theory import verify_equation_19, verify_proposition_1
 
 
@@ -29,11 +30,17 @@ def main() -> int:
         2: verify_proposition_1(),
         3: verify_equation_19(seed),
     }
-    if config["stage"] in {"claim_4_wallclock", "claim_5_2d"}:
+    if config["stage"] in {
+        "claim_4_wallclock",
+        "claim_5_2d",
+        "claim_6_mnist",
+    }:
         results[4] = run_wallclock()
-    if config["stage"] == "claim_5_2d":
+    if config["stage"] in {"claim_5_2d", "claim_6_mnist"}:
         results[5] = run_2d_suite()
         results[1] = results[5]["algorithm1_result"]
+    if config["stage"] == "claim_6_mnist":
+        results[6] = run_mnist_suite()
     for claim, result in results.items():
         claim_dir = ARTIFACTS / f"claim_{claim}"
         claim_dir.mkdir(parents=True, exist_ok=True)
@@ -48,6 +55,7 @@ def main() -> int:
                     3: "symbolic Gaussian integration plus independent Monte Carlo",
                     4: "independent paired-seed wall-clock comparison",
                     5: "independent objective, tracking-error, and large-beta checks",
+                    6: "finite-grid paired fresh-reward and digit-support checks",
                 }[claim],
                 "passed": result["passed"],
                 "details": result,
