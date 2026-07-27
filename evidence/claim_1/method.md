@@ -4,7 +4,10 @@ The current child executes the authors' `SOSMCULARewardTuner` on a checkpointed
 2D EBM with 10,000 particles and 1,001 outer iterations. It hashes the particle
 population before and after three consecutive outer iterations, counts ULA
 proposals, audits normalized candidate weights and ESS before resampling, and
-checks that the next iteration receives the exact prior population.
+checks that the next iteration receives the exact prior population. When a
+node contains multiple beta values, the same reference draw may be reused more
+than once, but only after every reference state and sampler configuration
+passes the bitwise equality guard.
 
 For two iterations, a separate checker reconstructs the parameter gradient as
 

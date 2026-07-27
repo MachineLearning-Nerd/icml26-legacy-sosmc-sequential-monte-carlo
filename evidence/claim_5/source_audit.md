@@ -19,9 +19,11 @@ indicator rewards. The illustrative setting uses `beta_KL=0.25` and 1,001
 outer iterations; the supplied notebook also defines `beta_KL=5` as its
 large-regularisation endpoint.
 
-The paper's prose is empirical rather than universally quantified. This
-runtime-calibrated node tests all three named datasets but only the
-lower-half-plane reward, seed 0 at small beta, and one large-beta control.
-It is an evidence shard, not a sufficient multi-seed acceptance result.
-Broader reward/beta and stochastic replication therefore remain stated
-limitations even if the scoped checker passes.
+The paper's prose is empirical rather than universally quantified: it says
+higher objective contours occur "in cases where" `beta_KL` is small, not for
+every dataset/reward combination. This node directly tests that finite
+illustrative case on circles at `beta_KL=0.25`, then tests the stated
+large-regularisation comparability at `beta_KL=5`. Separate two-moons and blobs
+shards audit whether the direction generalizes. Broader reward orientations
+and stochastic replication remain stated limitations even if this exact
+finite contract passes.

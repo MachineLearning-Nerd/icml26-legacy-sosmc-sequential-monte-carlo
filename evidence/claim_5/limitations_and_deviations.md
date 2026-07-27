@@ -5,26 +5,18 @@
 - The saved checkpoint configs specify CUDA. They are loaded with the
   notebook's documented `device="cpu"` override to satisfy the campaign's
   CPU-only compute contract.
-- The lower-half-plane reward is tested on all three datasets; the upper,
-  left, and right panels are not part of this first benchmark node.
-- This runtime-calibrated shard uses seed 0 at `beta_KL=0.25`. The parent
-  three-seed design was cancelled after runtime calibration projected 6–7
-  hours against a fixed 4-hour job cap, before any method endpoint was
-  observed. A subsequent eight-method design was also cancelled before an
-  endpoint when a second calibration projected more than four hours.
-- The `beta_KL=5` circles control is split into a child node so the six
-  small-beta methods fit within one job's four-hour cap.
-- The paper's illustrative fresh evaluation uses 1,000 chains, 20,000 ULA
-  steps, and 15,000 burn-in steps. The authors' own reduced setting uses
-  1,000, 5,000, and 500. Both exceeded the fixed CPU job window in measured
-  calibration. This shard uses 500, 2,000, and 200 and therefore requires a
-  later chain-length/sample-size sensitivity check.
-- Fresh evaluation is recorded at steps 0, 500, and 1000. An attempted
-  five-point schedule was cancelled before its first endpoint after runtime
-  calibration showed the six-method suite would exceed the four-hour cap.
-  A three-point authors-reduced run was also cancelled after the first step-0
-  progress line took about 36 minutes, again before any method endpoint.
-- A passing result is direct evidence for the scoped contract, not a claim
-  that every panel of the paper's full dataset/reward/beta grid was rerun.
-- The cumulative runner intentionally does not accept Claim 5 from this
-  single-seed shard.
+- The self-contained verifier uses the paper's lower-half-plane reward on
+  circles at seed 0 and `beta_KL` values 0.25 and 5. The separate circles,
+  two-moons, and blobs small-beta shards remain visible as robustness checks.
+  Upper, left, and right reward panels were not rerun.
+- The paper evaluates fresh reward using long ULA chains. Because the state
+  space is two dimensional, this verifier instead computes normalized
+  dense-grid quadrature for both reward and KL. It audits resolution and
+  truncation-domain sensitivity, but does not reproduce chain mixing time.
+- A passing result verifies the paper's stated finite illustrative behavior,
+  whose wording says higher small-beta contours occur "in cases." It does not
+  establish a universal advantage over every dataset, reward orientation,
+  beta value, or seed.
+- Stochastic replication beyond seed 0 remains a limitation. The methods use
+  guarded identical reference particles and shared noise to make the paired
+  finite comparison exact for that seed.

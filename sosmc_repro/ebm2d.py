@@ -23,9 +23,10 @@ NOTEBOOK = (
 NOTEBOOK_DIR = NOTEBOOK.parent
 DEFINITION_CELLS = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
 DATASETS = {
-    "blobs": "ebm_blobs",
+    "circles": "ebm_circles",
 }
 SMALL_BETA_SEEDS = [0]
+BETA_VALUES = (0.25, 5.0)
 TRUTH_GRID_LIMIT = 6.0
 TRUTH_GRID_RESOLUTION = 400
 TRUTH_GRID_BATCH = 65_536
@@ -477,9 +478,10 @@ def run_2d_suite() -> dict[str, Any]:
     os.chdir(NOTEBOOK_DIR)
     try:
         specifications = [
-            (dataset, alias, seed, 0.25)
+            (dataset, alias, seed, beta_kl)
             for dataset, alias in DATASETS.items()
             for seed in SMALL_BETA_SEEDS
+            for beta_kl in BETA_VALUES
         ]
         for dataset, alias, seed, beta_kl in specifications:
             trial_started = time.perf_counter()
@@ -574,7 +576,7 @@ def run_2d_suite() -> dict[str, Any]:
             "reward": "lower_halfplane",
             "small_beta": 0.25,
             "small_beta_seeds": SMALL_BETA_SEEDS,
-            "large_beta_control": "not run in this dataset shard",
+            "large_beta_control": 5.0,
             "n_particles": 10_000,
             "n_outer_steps": 1_001,
             "fresh_eval_frequency": 500,

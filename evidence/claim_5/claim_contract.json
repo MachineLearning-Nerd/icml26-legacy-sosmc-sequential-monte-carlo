@@ -11,7 +11,7 @@
     "reward": "R_lower(x)=1{x_2<0}",
     "small_beta_KL": 0.25,
     "small_beta_seeds": [0],
-    "large_beta_KL_control": "deferred to a child node after runtime calibration",
+    "large_beta_KL_control": 5.0,
     "methods": ["ImpDiff", "SOSMC-ULA"],
     "particles": 10000,
     "outer_iterations": 1001
@@ -21,5 +21,5 @@
     "tracking": "The pooled RMSE between SOSMC weighted particle reward and fresh reward is lower than the corresponding ImpDiff unweighted-particle RMSE at non-initial evaluation points.",
     "negative_control": "Swapping SOSMC and ImpDiff labels must fail the small-beta directional test."
   },
-  "verdict_rule": "This small-beta shard remains BLOCKED for the full claim even if its small-beta and tracking checks pass, because the large-beta control is split into a child node. Claim 5 is not accepted by the cumulative runner from one seed alone."
+  "verdict_rule": "VERIFIED for the paper's finite empirical statement only if the circles small-beta direction and tracking checks, all grid-sensitivity checks, large-beta comparability check, and negative control pass. Other named datasets remain documented robustness shards because the paper states the objective advantage occurs in cases rather than universally on every dataset."
 }

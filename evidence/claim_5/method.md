@@ -11,18 +11,15 @@ device. The verifier passes `device="cpu"` through the notebook's documented
 `load_trainer` override; model architecture, weights, optimiser state, data,
 and all scientific hyperparameters are unchanged.
 
-At each fresh-evaluation iteration, raw evidence records reward, quadrature KL,
-the paper's objective `reward - beta_KL * KL`, and the particle estimate.
-An independent checker compares best objectives by paired dataset/seed,
-computes particle-to-fresh RMSE, evaluates the large-beta control, and swaps
-method labels as a negative control.
+At steps 0, 500, and 1000, raw evidence records the normalized dense-grid
+quadrature reward and KL, the paper's objective `reward - beta_KL * KL`, and
+the particle estimate. This deterministic 2D evaluator replaces the
+notebook's long-chain approximation and removes fresh-sampling error. The
+primary 400-by-400 grid on `[-6,6]^2` is independently checked with a
+600-by-600 grid and a wider `[-8,8]^2` domain.
 
-Fresh evaluation uses 500 samples, 2,000 ULA steps, and 200 burn-in steps.
-Runtime calibration on the required CPU backend showed that even the authors'
-documented reduced evaluator (1,000 samples, 5,000 steps, 500 burn-in) took
-about 36 minutes to reach the first step-0 progress record, making the
-six-method suite impossible within the four-hour job cap. Three bounded
-evaluations are taken over 1,001 outer iterations, so tracking is observed at
-start, midpoint, and endpoint (steps 0, 500, and 1000). This evaluator
-substitution is treated as a material uncertainty and must be sensitivity
-checked before a final Claim 5 acceptance.
+The self-contained circles node runs both `beta_KL=0.25` and `beta_KL=5`.
+An independent checker tests the small-beta best-objective direction,
+particle-to-grid reward RMSE, large-beta objective comparability, all grid
+variants, and a reversed-label negative control. Separate two-moons and blobs
+nodes are robustness shards rather than assumptions of the finite verifier.

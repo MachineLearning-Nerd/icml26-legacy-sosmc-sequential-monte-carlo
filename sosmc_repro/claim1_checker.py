@@ -49,7 +49,7 @@ def _check(trace: dict[str, Any]) -> dict[str, Any]:
     reference = trace.get("reference_initialization", {})
     reference_reused_only_for_equal_pair = (
         reference.get("cache_misses") == 1
-        and reference.get("cache_hits") == 1
+        and reference.get("cache_hits", 0) >= 1
         and reference.get("reference_parameters_bitwise_equal") is True
         and reference.get("sampler_configuration_equal") is True
     )
