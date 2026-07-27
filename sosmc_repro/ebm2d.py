@@ -24,6 +24,9 @@ DATASETS = {
     "circles": "ebm_circles",
 }
 SMALL_BETA_SEEDS = [0]
+TRUTH_GRID_LIMIT = 6.0
+TRUTH_GRID_RESOLUTION = 400
+TRUTH_GRID_BATCH = 65_536
 
 
 def _trial_config(
@@ -60,20 +63,68 @@ def _trial_config(
         "noise_scale_sosmc": 1.0,
         "ess_resample_ratio": 0.9,
         "ess_adapt_ratio": 0.95,
-        # CPU runtime calibration showed the authors' 5,000-step/1,000-chain
-        # reduced evaluator still exceeds the four-hour cap. Preserve the
-        # exact tuning algorithm and use a declared bounded fresh evaluator.
+        # The trigger frequency is unchanged, but a method-independent 2D
+        # grid quadrature installed below replaces stochastic evaluation MCMC.
         "n_eval_fresh": 500,
-        "eval_n_samples": 500,
-        "eval_langevin_steps": 2_000,
+        "eval_n_samples": 1,
+        "eval_langevin_steps": 1,
         "eval_thin": 1,
-        "eval_burn_in": 200,
+        "eval_burn_in": 0,
         "eval_step_size": 5e-3,
         "eval_noise_scale": 1.0,
         "eval_clamp_value": None,
         "seed": seed,
         "beta_kl": beta_kl,
     }
+
+
+def _install_grid_truth_evaluator(namespace: dict[str, Any]) -> None:
+    torch = namespace["torch"]
+    batched_energy = namespace["_batched_energy"]
+
+    @torch.no_grad()
+    def evaluate_grid(self: Any) -> dict[str, float]:
+        """Integrate reward and reverse KL under the normalized 2D EBM."""
+        self.energy.eval()
+        axis = torch.linspace(
+            -TRUTH_GRID_LIMIT,
+            TRUTH_GRID_LIMIT,
+            TRUTH_GRID_RESOLUTION,
+            device=self.device,
+        )
+        xx, yy = torch.meshgrid(axis, axis, indexing="xy")
+        grid = torch.stack([xx.reshape(-1), yy.reshape(-1)], dim=1)
+        energy = batched_energy(
+            self.energy, grid, batch=TRUTH_GRID_BATCH
+        ).double()
+        energy_ref = batched_energy(
+            self.energy_ref, grid, batch=TRUTH_GRID_BATCH
+        ).double()
+        cell = (
+            (2.0 * TRUTH_GRID_LIMIT) / (TRUTH_GRID_RESOLUTION - 1)
+        ) ** 2
+        log_z = torch.logsumexp(-energy, dim=0) + torch.log(
+            torch.as_tensor(cell, dtype=torch.float64, device=self.device)
+        )
+        log_z_ref = torch.logsumexp(-energy_ref, dim=0) + torch.log(
+            torch.as_tensor(cell, dtype=torch.float64, device=self.device)
+        )
+        log_p = -energy - log_z
+        log_p_ref = -energy_ref - log_z_ref
+        mass = log_p.exp() * cell
+        reward = self.reward_fn(grid).reshape(-1).double()
+        mean_reward = (mass * reward).sum()
+        reverse_kl = (mass * (log_p - log_p_ref)).sum()
+        self.energy.train()
+        return {
+            "mean": float(mean_reward.item()),
+            "kl_grid": float(reverse_kl.item()),
+            "logZ": float(log_z.item()),
+            "logZ0": float(log_z_ref.item()),
+        }
+
+    namespace["IDRewardTuner"]._eval_fresh = evaluate_grid
+    namespace["SOSMCULARewardTuner"]._eval_fresh = evaluate_grid
 
 
 def _rows(
@@ -136,6 +187,7 @@ def run_2d_suite() -> dict[str, Any]:
     # Use their loader's documented device override to enforce this campaign's
     # CPU-only compute contract without altering checkpoint content.
     namespace["load_trainer"] = load_trainer_cpu
+    _install_grid_truth_evaluator(namespace)
     run_trial = namespace["run_experimental_trial"]
     reward_fn = namespace["reward_lower_halfplane"]
     rows: list[dict[str, Any]] = []
@@ -199,9 +251,11 @@ def run_2d_suite() -> dict[str, Any]:
             "n_particles": 10_000,
             "n_outer_steps": 1_001,
             "fresh_eval_frequency": 500,
-            "fresh_eval_samples": 500,
-            "fresh_eval_langevin_steps": 2_000,
-            "fresh_eval_burn_in": 200,
+            "truth_evaluator": "normalized dense-grid quadrature",
+            "truth_grid_limit": TRUTH_GRID_LIMIT,
+            "truth_grid_resolution": TRUTH_GRID_RESOLUTION,
+            "truth_grid_batch": TRUTH_GRID_BATCH,
+            "fresh_eval_sampling_error": 0.0,
             "checkpoint_device_override": "cpu",
         },
         "trial_metadata": trial_metadata,
