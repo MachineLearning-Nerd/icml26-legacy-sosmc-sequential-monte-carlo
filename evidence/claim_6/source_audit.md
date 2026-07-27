@@ -13,10 +13,12 @@ consistent with the regularization without reward hacking.
 
 Appendix E.3 fixes the input domain at `28x28x1`, the convolutional Swish EBM
 checkpoint, 1,000 particles, 1,000 outer iterations, one transition per outer
-iteration, Adam at `1e-4`, initial ULA step size `3e-3` in the supplied sweep,
-ESS thresholds `0.9` and `0.95`, and rewards for brightness, darkness, and
-lower-half concentration. The supplied notebook's sweep uses
-`beta_KL in {5,2,1,0.5}`.
+iteration, Adam at `1e-4`, an initial ULA step size reported as `5e-3`, ESS
+thresholds `0.9` and `0.95`, and rewards for brightness, darkness, and
+lower-half concentration. The supplied notebook's executed sweep instead uses
+step size `3e-3` and `beta_KL in {5,2,1,0.5}`. Its saved textual outputs also
+report `gamma=0.003000`. The primary node follows that executable sweep and
+records the paper/code disagreement rather than silently choosing a value.
 
 The pretraining/evaluation transition adds Gaussian jitter with standard
 deviation `0.005`, clamps pixels to `[-1,1]`, clips each energy-gradient

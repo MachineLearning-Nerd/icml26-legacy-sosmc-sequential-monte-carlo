@@ -17,3 +17,9 @@ Appendix E.3 writes the lower-half reward with a factor `1/2`; the notebook
 helper omits that factor. This reproduction follows the paper's formula and
 records the discrepancy. The optimizer, model, sampler, particle count,
 iteration count, and regularization grid remain the authors' implementation.
+
+Appendix E.3 reports an initial tuning step size of `5e-3`, whereas the released
+notebook's beta sweep and saved outputs use `3e-3`. The primary node follows the
+executable sweep (`3e-3`). If the resulting evidence remains interpretation
+sensitive, a separate child must test the paper-text value; the value will not
+be changed retrospectively on this node.
