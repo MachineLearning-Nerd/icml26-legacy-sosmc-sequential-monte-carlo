@@ -2,5 +2,5 @@
   "stage": "claim_5_2d",
   "accepted_claims": [2, 3, 4],
   "seed": 20260726,
-  "description": "Complete seed-0 circles small-beta shard of the official checkpointed 2D EBM suite. Exact 10k-particle/1001-step tuning, a shared exact 20k-step reference-particle draw guarded by bitwise reference/config checks, and independent dense-grid quadrature for the true 2D reward expectation and KL. Claim 5 is measured but not accepted until the three datasets, sensitivity, and large-beta control are aggregated."
+  "description": "Complete seed-0 two_moons small-beta shard of the official checkpointed 2D EBM suite. Exact 10k-particle/1001-step tuning, a shared exact 20k-step reference-particle draw guarded by bitwise reference/config checks, and independent multi-grid quadrature for the true 2D reward expectation and KL. Claim 5 is measured but not accepted until the three datasets and large-beta control are aggregated."
 }

@@ -89,6 +89,42 @@ def evaluate(rows: list[dict[str, Any]]) -> dict[str, Any]:
         < tracking["ImpDiff"]["rmse_particle_vs_fresh"]
     )
 
+    variant_names = sorted(
+        set.intersection(
+            *[
+                set(row.get("truth_grid_sensitivity", {}))
+                for row in small
+            ]
+        )
+    )
+    variant_directions: dict[str, bool] = {}
+    variant_gaps: dict[str, float] = {}
+    for variant in variant_names:
+        variant_best: dict[tuple[str, int, str], float] = {}
+        for row in small:
+            key = (
+                str(row["dataset"]),
+                int(row["seed"]),
+                str(row["method"]),
+            )
+            objective = float(
+                row["truth_grid_sensitivity"][variant]["objective"]
+            )
+            variant_best[key] = max(
+                variant_best.get(key, -math.inf), objective
+            )
+        gaps = [
+            variant_best[(dataset, seed, "SOSMC-ULA")]
+            - variant_best[(dataset, seed, "ImpDiff")]
+            for dataset in datasets
+            for seed in seeds
+        ]
+        variant_gaps[variant] = statistics.fmean(gaps)
+        variant_directions[variant] = all(gap > 0.0 for gap in gaps)
+    grid_sensitivity_passed = bool(variant_names) and all(
+        variant_directions.values()
+    )
+
     large_best: dict[str, float] = {}
     if large:
         for method in ("ImpDiff", "SOSMC-ULA"):
@@ -115,12 +151,14 @@ def evaluate(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "small_beta_positive_observed_advantage": paired_mean > 0.0,
         "small_beta_positive_advantage_each_dataset": per_dataset_direction,
         "sosmc_weighted_tracking_rmse_below_impdiff_unweighted": tracking_better,
+        "small_beta_positive_across_grid_variants": grid_sensitivity_passed,
         "large_beta_best_objectives_within_0p05": large_comparable,
     }
     small_beta_and_tracking_passed = (
         checks["small_beta_positive_observed_advantage"]
         and all(per_dataset_direction.values())
         and tracking_better
+        and grid_sensitivity_passed
         and negative_control_failed_as_intended
     )
     passed = small_beta_and_tracking_passed and large_comparable is True
@@ -143,6 +181,11 @@ def evaluate(rows: list[dict[str, Any]]) -> dict[str, Any]:
         },
         "per_dataset_positive_mean_advantage": per_dataset_direction,
         "tracking": tracking,
+        "grid_sensitivity": {
+            "variants": variant_names,
+            "sosmc_minus_impdiff_best_objective": variant_gaps,
+            "positive_direction": variant_directions,
+        },
         "large_beta_control": {
             "run": bool(large),
             "best_objectives": large_best,

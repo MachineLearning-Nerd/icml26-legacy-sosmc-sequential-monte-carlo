@@ -21,12 +21,17 @@ NOTEBOOK = (
 NOTEBOOK_DIR = NOTEBOOK.parent
 DEFINITION_CELLS = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
 DATASETS = {
-    "circles": "ebm_circles",
+    "two_moons": "ebm_two_moons",
 }
 SMALL_BETA_SEEDS = [0]
 TRUTH_GRID_LIMIT = 6.0
 TRUTH_GRID_RESOLUTION = 400
 TRUTH_GRID_BATCH = 65_536
+TRUTH_GRID_VARIANTS = {
+    "resolution_400_limit_6": (400, 6.0),
+    "resolution_600_limit_6": (600, 6.0),
+    "resolution_400_limit_8": (400, 8.0),
+}
 
 
 def _trial_config(
@@ -83,46 +88,70 @@ def _install_grid_truth_evaluator(namespace: dict[str, Any]) -> None:
     batched_energy = namespace["_batched_energy"]
 
     @torch.no_grad()
-    def evaluate_grid(self: Any) -> dict[str, float]:
-        """Integrate reward and reverse KL under the normalized 2D EBM."""
-        self.energy.eval()
+    def integrate_grid(
+        energy: Any,
+        energy_ref: Any,
+        reward_fn: Any,
+        device: str,
+        resolution: int,
+        limit: float,
+    ) -> dict[str, float]:
         axis = torch.linspace(
-            -TRUTH_GRID_LIMIT,
-            TRUTH_GRID_LIMIT,
-            TRUTH_GRID_RESOLUTION,
-            device=self.device,
+            -limit,
+            limit,
+            resolution,
+            device=device,
         )
         xx, yy = torch.meshgrid(axis, axis, indexing="xy")
         grid = torch.stack([xx.reshape(-1), yy.reshape(-1)], dim=1)
         energy = batched_energy(
-            self.energy, grid, batch=TRUTH_GRID_BATCH
+            energy, grid, batch=TRUTH_GRID_BATCH
         ).double()
         energy_ref = batched_energy(
-            self.energy_ref, grid, batch=TRUTH_GRID_BATCH
+            energy_ref, grid, batch=TRUTH_GRID_BATCH
         ).double()
-        cell = (
-            (2.0 * TRUTH_GRID_LIMIT) / (TRUTH_GRID_RESOLUTION - 1)
-        ) ** 2
+        cell = ((2.0 * limit) / (resolution - 1)) ** 2
         log_z = torch.logsumexp(-energy, dim=0) + torch.log(
-            torch.as_tensor(cell, dtype=torch.float64, device=self.device)
+            torch.as_tensor(cell, dtype=torch.float64, device=device)
         )
         log_z_ref = torch.logsumexp(-energy_ref, dim=0) + torch.log(
-            torch.as_tensor(cell, dtype=torch.float64, device=self.device)
+            torch.as_tensor(cell, dtype=torch.float64, device=device)
         )
         log_p = -energy - log_z
         log_p_ref = -energy_ref - log_z_ref
         mass = log_p.exp() * cell
-        reward = self.reward_fn(grid).reshape(-1).double()
+        reward = reward_fn(grid).reshape(-1).double()
         mean_reward = (mass * reward).sum()
         reverse_kl = (mass * (log_p - log_p_ref)).sum()
-        self.energy.train()
         return {
             "mean": float(mean_reward.item()),
             "kl_grid": float(reverse_kl.item()),
             "logZ": float(log_z.item()),
             "logZ0": float(log_z_ref.item()),
+            "resolution": resolution,
+            "limit": limit,
         }
 
+    @torch.no_grad()
+    def evaluate_grid(self: Any) -> dict[str, float]:
+        """Integrate reward and reverse KL under the normalized 2D EBM."""
+        self.energy.eval()
+        variants = {
+            name: integrate_grid(
+                self.energy,
+                self.energy_ref,
+                self.reward_fn,
+                self.device,
+                resolution,
+                limit,
+            )
+            for name, (resolution, limit) in TRUTH_GRID_VARIANTS.items()
+        }
+        self.history.setdefault("truth_grid_sensitivity", []).append(variants)
+        self.energy.train()
+        return variants["resolution_400_limit_6"]
+
+    namespace["_sosmc_integrate_grid"] = integrate_grid
     namespace["IDRewardTuner"]._eval_fresh = evaluate_grid
     namespace["SOSMCULARewardTuner"]._eval_fresh = evaluate_grid
 
@@ -219,6 +248,14 @@ def _rows(
         weighted_particle_reward = float(history[particle_key][outer_index])
         fresh_reward = float(history["fresh_reward_mean"][index])
         fresh_kl = float(history["fresh_kl_grid"][index])
+        grid_sensitivity = {
+            name: {
+                **values,
+                "objective": float(values["mean"])
+                - beta_kl * float(values["kl_grid"]),
+            }
+            for name, values in history["truth_grid_sensitivity"][index].items()
+        }
         rows.append(
             {
                 "dataset": dataset,
@@ -231,6 +268,7 @@ def _rows(
                 "objective": fresh_reward - beta_kl * fresh_kl,
                 "particle_reward": particle_reward,
                 "weighted_particle_reward": weighted_particle_reward,
+                "truth_grid_sensitivity": grid_sensitivity,
             }
         )
     return rows
@@ -278,6 +316,20 @@ def run_2d_suite() -> dict[str, Any]:
             trial_started = time.perf_counter()
             config = _trial_config(reward_fn, alias, seed, beta_kl)
             result = run_trial(config, run_impdiff=True, run_sosmc=True)
+            p0_grid = namespace["_sosmc_integrate_grid"](
+                result["energy_ref"],
+                result["energy_ref"],
+                reward_fn,
+                "cpu",
+                TRUTH_GRID_RESOLUTION,
+                TRUTH_GRID_LIMIT,
+            )
+            result["p0A"] = float(p0_grid["mean"])
+            result["opt_reward"] = float(
+                namespace["optimal_indicator_reward"](
+                    result["p0A"], beta_kl
+                )
+            )
             rows.extend(
                 _rows(
                     result["history_impdiff"],
@@ -328,6 +380,7 @@ def run_2d_suite() -> dict[str, Any]:
             "truth_grid_limit": TRUTH_GRID_LIMIT,
             "truth_grid_resolution": TRUTH_GRID_RESOLUTION,
             "truth_grid_batch": TRUTH_GRID_BATCH,
+            "truth_grid_variants": TRUTH_GRID_VARIANTS,
             "fresh_eval_sampling_error": 0.0,
             "paired_reference_particle_cache": reference_cache,
             "checkpoint_device_override": "cpu",
