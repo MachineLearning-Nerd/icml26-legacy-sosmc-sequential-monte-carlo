@@ -3,7 +3,7 @@
   "paper_anchor": [
     "Section 5.3",
     "Appendix E.3",
-    "Figures 5 and A.15"
+    "Figures 5 and 18"
   ],
   "exact_statement": "With an MNIST EBM pretrained using the clipped jitter-and-gradient sampler but tuned with pure Gaussian ULA, SOSMC-ULA increases fresh reward across the three stated rewards and beta_KL values while preserving digit-like structure rather than exploiting the reward.",
   "finite_domain": {
