@@ -13,10 +13,12 @@ under the original pretraining sampler. This avoids using intermediate
 evaluation randomness to change optimization and directly tests the paper's
 terminal robustness statement.
 
-Appendix E.3 writes the lower-half reward with a factor `1/2`; the notebook
-helper omits that factor. This reproduction follows the paper's formula and
-records the discrepancy. The optimizer, model, sampler, particle count,
-iteration count, and regularization grid remain the authors' implementation.
+Appendix E.3 writes `R_dark=-mean(x)` and the lower-half reward with a factor
+`1/2`. The executed darkness sweep introduces a factor `1/2`, while the
+notebook half-plane helper omits it. This reproduction follows the paper's
+formulas and records both discrepancies. The optimizer, model, sampler,
+particle count, iteration count, and regularization grid remain the authors'
+implementation.
 
 Appendix E.3 reports an initial tuning step size of `5e-3`, whereas the released
 notebook's beta sweep and saved outputs use `3e-3`. The primary node follows the

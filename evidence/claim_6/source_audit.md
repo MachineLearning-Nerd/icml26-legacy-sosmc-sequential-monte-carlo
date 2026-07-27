@@ -20,6 +20,13 @@ step size `3e-3` and `beta_KL in {5,2,1,0.5}`. Its saved textual outputs also
 report `gamma=0.003000`. The primary node follows that executable sweep and
 records the paper/code disagreement rather than silently choosing a value.
 
+The Appendix defines `R_dark=-mean(x)` and
+`R_half=0.5*(mean(bottom)-mean(top))`. The executed darkness sweep locally
+redefines `R_dark=-0.5*mean(x)`, while the notebook's half-plane helper omits
+the factor `0.5`. The primary node follows the written paper definitions. The
+saved executable scaling is a distinct interpretation route if the primary
+result remains uncertain.
+
 The pretraining/evaluation transition adds Gaussian jitter with standard
 deviation `0.005`, clamps pixels to `[-1,1]`, clips each energy-gradient
 component to `[-0.03,0.03]`, and takes a gradient step scaled by `10`. The paper
