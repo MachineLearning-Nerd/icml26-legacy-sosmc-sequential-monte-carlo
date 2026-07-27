@@ -1,6 +1,6 @@
 {
-  "stage": "claim_5_2d",
-  "accepted_claims": [1, 2, 3, 4, 5],
+  "stage": "claim_6_mnist",
+  "accepted_claims": [1, 2, 3, 4, 5, 6],
   "seed": 20260726,
-  "description": "Self-contained circles verification of Claim 5 at beta_KL 0.25 and 5.0, with official ImpDiff and SOSMC-ULA, exact 10k-particle/1001-step tuning, guarded shared 20k-step reference particles, multi-grid quadrature for reward and KL, particle-reward tracking, and a reversed-label control. Cumulatively rerun and require Claims 1-4."
+  "description": "Cumulative CPU-only verification through Claim 6. Rerun Claims 1-5, including the self-contained circles small/large-beta verifier, then execute SOSMC-ULA on the official checkpointed convolutional MNIST EBM across the exact three-reward by four-beta grid. Evaluate terminal fresh reward with three paired seeds under the distinct original pretraining sampler and reject reward-maximizing non-digit controls using an independently trained and validated MNIST recognizer plus feature-support distance."
 }

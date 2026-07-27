@@ -1,0 +1,25 @@
+{
+  "claim_id": 6,
+  "paper_anchor": [
+    "Section 5.3",
+    "Appendix E.3",
+    "Figures 5 and 18"
+  ],
+  "exact_statement": "With an MNIST EBM pretrained using the clipped jitter-and-gradient sampler but tuned with pure Gaussian ULA, SOSMC-ULA increases fresh reward across the three stated rewards and beta_KL values while preserving digit-like structure rather than exploiting the reward.",
+  "finite_domain": {
+    "rewards": ["bright", "dark", "lower_half"],
+    "beta_KL": [5.0, 2.0, 1.0, 0.5],
+    "method": "SOSMC-ULA",
+    "particles": 1000,
+    "outer_iterations": 1000
+  },
+  "acceptance": [
+    "Run all 12 reward/beta cells from the same checkpoint and guarded identical initial particles.",
+    "For every cell, the paired 95% interval for terminal fresh reward minus pretrained fresh reward is strictly positive under the original pretraining sampler.",
+    "A separately trained MNIST recognizer must achieve at least 97% test accuracy.",
+    "For every cell, tuned samples retain at least half the baseline median classifier confidence and have median standardized recognizer-feature support distance no greater than max(real-test q95, 1.5 times baseline median distance).",
+    "Reward-maximizing constant or half-plane images must exceed the digit-support distance limit and therefore fail the anti-hacking check.",
+    "Swapping pretrained and tuned reward labels must fail the every-cell reward-improvement check."
+  ],
+  "verdict_rule": "VERIFIED only if every finite-grid, kernel, recognizer, anti-hacking, initialization, and negative-control check passes; otherwise BLOCKED unless an assumption-satisfying contradiction is independently established."
+}
