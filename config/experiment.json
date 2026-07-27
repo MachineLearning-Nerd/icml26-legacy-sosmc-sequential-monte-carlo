@@ -2,5 +2,5 @@
   "stage": "claim_5_2d",
   "accepted_claims": [2, 3, 4],
   "seed": 20260726,
-  "description": "Runtime-calibrated seed-0 small-beta shard of the official checkpointed three-dataset 2D EBM suite. The beta=5 circles control is split to a child. Claim 5 is measured but not accepted from this shard."
+  "description": "Complete seed-0 circles small-beta shard of the official checkpointed 2D EBM suite. Exact 10k-particle/1001-step tuning with a declared bounded fresh evaluator. Claim 5 is measured but not accepted until the three datasets, sensitivity, and large-beta control are aggregated."
 }

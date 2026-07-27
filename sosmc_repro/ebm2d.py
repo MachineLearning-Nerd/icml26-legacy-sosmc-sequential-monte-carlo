@@ -22,8 +22,6 @@ NOTEBOOK_DIR = NOTEBOOK.parent
 DEFINITION_CELLS = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
 DATASETS = {
     "circles": "ebm_circles",
-    "two_moons": "ebm_two_moons",
-    "blobs": "ebm_blobs",
 }
 SMALL_BETA_SEEDS = [0]
 
@@ -197,7 +195,7 @@ def run_2d_suite() -> dict[str, Any]:
             "reward": "lower_halfplane",
             "small_beta": 0.25,
             "small_beta_seeds": SMALL_BETA_SEEDS,
-            "large_beta_control": "not run in this runtime-bounded shard",
+            "large_beta_control": "not run in this dataset shard",
             "n_particles": 10_000,
             "n_outer_steps": 1_001,
             "fresh_eval_frequency": 500,
