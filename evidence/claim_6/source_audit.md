@@ -6,10 +6,15 @@ Source: `https://ar5iv.labs.arxiv.org/html/2601.22003`, retrieved
 
 Section 5.3 says the convolutional MNIST EBM is pretrained with a sampling
 procedure distinct from the ULA kernel used during tuning. It evaluates tuned
-models with long chains under the original pretraining sampler. The operative
-finite statement is that across all considered rewards and `beta_KL` values,
-fresh reward increases relative to the pretrained baseline and samples remain
-consistent with the regularization without reward hacking.
+models with long chains under the original pretraining sampler. Paragraph
+`S5.SS3.p4.7` states that across all rewards and values of `beta_KL`, both
+methods increase fresh reward relative to the pretrained baseline. Paragraph
+`S5.SS3.p4.8` says that the fresh samples are consistent with the respective
+regularisation and do not exhibit reward hacking. Appendix paragraph
+`A5.SS3.p6.4` sharpens the image assertion: digit-like structure is preserved
+under the reward tuning, while acknowledging mode collapse at low `beta_KL`,
+particularly for brightness and darkness. Mode collapse therefore is not
+itself a counterexample; loss of digit-like structure is.
 
 Appendix E.3 fixes the input domain at `28x28x1`, the convolutional Swish EBM
 checkpoint, 1,000 particles, 1,000 outer iterations, one transition per outer
@@ -41,9 +46,20 @@ reward-maximizing controls fell inside its support threshold. This agrees with
 the known possibility of high-confidence predictions for unrecognizable images
 (Nguyen, Yosinski, and Clune, arXiv:1412.1897).
 
-This second route follows the authors' executed `3e-3` sweep and executable
-reward scalings. Its anti-hacking test is classifier-independent: pixel
-standard deviation, image total variation, and nearest-neighbor distance in a
-fixed 7x7 average-pooled pixel representation. Thresholds are calibrated only
-from balanced held-out real MNIST and pretrained EBM samples. Tuned samples
-and reward-maximizing controls are excluded from calibration.
+Route 2 followed the authors' executed `3e-3` sweep and executable reward
+scalings. Its classifier-independent morphology test rejected five low-beta
+cells while every fresh-reward interval was positive, but simple morphology
+and pooled-pixel distance are not a complete definition of human digit
+perception. That route remains `BLOCKED`.
+
+Route 3 retains the authors' executable sweep but changes the scientific route:
+it fits a deterministic 64-component one-class PCA digit manifold on 5,000
+balanced real MNIST training images. Its anomaly score combines standardized
+PCA coefficient energy with reconstruction residual. The score limit is
+fixed from held-out real MNIST and pretrained EBM samples only. Tuned samples,
+the exact reward maximizers, and a held-out pixel-shuffling corruption are
+excluded from fitting and calibration. A low-beta cell is a valid
+counterexample only if its reward improvement interval is positive, the lower
+endpoint of its population-median anomaly-score interval exceeds the fixed
+limit, the pretrained baseline is accepted, and both control families are
+rejected.

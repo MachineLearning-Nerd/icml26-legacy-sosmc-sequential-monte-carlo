@@ -43,6 +43,9 @@ EVAL_SAMPLES_PER_SEED = 64
 EVAL_STEPS = 512
 CLASSIFIER_SEED = 2026072721
 CLASSIFIER_EPOCHS = 3
+PCA_SEED = 2026072722
+PCA_COMPONENTS = 64
+PCA_TRAIN_PER_CLASS = 500
 MNIST_CACHE = ROOT / ".openresearch" / "cache" / "mnist"
 
 
@@ -191,6 +194,37 @@ def _morphology_diagnostics(
     }
 
 
+@torch.no_grad()
+def _pca_reconstruction_residual(
+    samples: torch.Tensor,
+    pca_mean: torch.Tensor,
+    pca_basis: torch.Tensor,
+) -> torch.Tensor:
+    centered = samples.flatten(1) - pca_mean
+    coordinates = centered @ pca_basis
+    reconstruction = coordinates @ pca_basis.T
+    return (centered - reconstruction).square().mean(dim=1)
+
+
+@torch.no_grad()
+def _pca_digit_manifold_score(
+    samples: torch.Tensor,
+    pca_mean: torch.Tensor,
+    pca_basis: torch.Tensor,
+    pca_variance: torch.Tensor,
+    pca_residual_scale: torch.Tensor,
+) -> torch.Tensor:
+    centered = samples.flatten(1) - pca_mean
+    coordinates = centered @ pca_basis
+    coefficient_score = (
+        coordinates.square() / pca_variance
+    ).mean(dim=1)
+    residual = _pca_reconstruction_residual(
+        samples, pca_mean, pca_basis
+    )
+    return coefficient_score + residual / pca_residual_scale
+
+
 def _balanced_indices(
     targets: torch.Tensor, per_class: int
 ) -> torch.Tensor:
@@ -274,9 +308,54 @@ def _train_recognizer() -> dict[str, Any]:
             count += labels.numel()
 
     reference_indices = _balanced_indices(train_data.targets, 100)
+    pca_indices = _balanced_indices(
+        train_data.targets, PCA_TRAIN_PER_CLASS
+    )
     real_test_indices = _balanced_indices(test_data.targets, 100)
     reference_images = _mnist_tensor(train_data, reference_indices)
+    pca_images = _mnist_tensor(train_data, pca_indices)
     real_test_images = _mnist_tensor(test_data, real_test_indices)
+    pca_flat = pca_images.flatten(1)
+    pca_mean = pca_flat.mean(dim=0)
+    _seed_all(PCA_SEED)
+    _, _, pca_basis = torch.pca_lowrank(
+        pca_flat - pca_mean,
+        q=PCA_COMPONENTS,
+        center=False,
+        niter=4,
+    )
+    pca_coordinates = (pca_flat - pca_mean) @ pca_basis
+    pca_variance = pca_coordinates.var(
+        dim=0, unbiased=True
+    ).clamp_min(1e-8)
+    pca_train_residual = _pca_reconstruction_residual(
+        pca_images, pca_mean, pca_basis
+    )
+    pca_residual_scale = pca_train_residual.median().clamp_min(
+        1e-8
+    )
+    real_pca_score = _pca_digit_manifold_score(
+        real_test_images,
+        pca_mean,
+        pca_basis,
+        pca_variance,
+        pca_residual_scale,
+    )
+    permutation_generator = torch.Generator().manual_seed(PCA_SEED)
+    pixel_permutation = torch.randperm(
+        28 * 28, generator=permutation_generator
+    )
+    shuffled_real = (
+        real_test_images.flatten(1)[:, pixel_permutation]
+        .reshape_as(real_test_images)
+    )
+    shuffled_pca_score = _pca_digit_manifold_score(
+        shuffled_real,
+        pca_mean,
+        pca_basis,
+        pca_variance,
+        pca_residual_scale,
+    )
     pixel_reference = _pixel_descriptor(reference_images)
     _, reference_features = _recognizer_features(
         model, reference_images
@@ -304,6 +383,16 @@ def _train_recognizer() -> dict[str, Any]:
         "feature_mean": feature_mean,
         "feature_std": feature_std,
         "pixel_reference": pixel_reference,
+        "pca_mean": pca_mean,
+        "pca_basis": pca_basis,
+        "pca_variance": pca_variance,
+        "pca_residual_scale": pca_residual_scale,
+        "pca_real_test_digit_manifold_score": (
+            _distribution_summary(real_pca_score)
+        ),
+        "pca_shuffled_real_digit_manifold_score": (
+            _distribution_summary(shuffled_pca_score)
+        ),
         "test_accuracy": correct / count,
         "epoch_losses": epoch_losses,
         "real_test_support_distance": _distribution_summary(
@@ -315,6 +404,9 @@ def _train_recognizer() -> dict[str, Any]:
         "dataset_file_sha256": dataset_files,
         "training_seed": CLASSIFIER_SEED,
         "training_epochs": CLASSIFIER_EPOCHS,
+        "pca_seed": PCA_SEED,
+        "pca_components": PCA_COMPONENTS,
+        "pca_training_images": int(pca_images.shape[0]),
         "runtime_seconds": time.perf_counter() - started,
     }
 
@@ -340,7 +432,10 @@ def _distribution_summary(values: torch.Tensor) -> dict[str, float]:
         "mean": float(values.mean().item()),
         "std": float(values.std(unbiased=True).item()),
         "median": float(values.median().item()),
+        "q01": float(torch.quantile(values, 0.01).item()),
+        "q05": float(torch.quantile(values, 0.05).item()),
         "q95": float(torch.quantile(values, 0.95).item()),
+        "q99": float(torch.quantile(values, 0.99).item()),
         "minimum": float(values.min().item()),
         "maximum": float(values.max().item()),
     }
@@ -361,6 +456,13 @@ def _digit_diagnostics(
     support = _nearest_support_distance(
         standardized, recognizer["reference_features"]
     )
+    pca_score = _pca_digit_manifold_score(
+        samples,
+        recognizer["pca_mean"],
+        recognizer["pca_basis"],
+        recognizer["pca_variance"],
+        recognizer["pca_residual_scale"],
+    )
     return {
         "classifier_confidence_mean": float(confidence.mean().item()),
         "classifier_confidence_median": float(confidence.median().item()),
@@ -372,6 +474,13 @@ def _digit_diagnostics(
         "predicted_class_count": int(
             probabilities.argmax(dim=1).unique().numel()
         ),
+        "pca_digit_manifold_score": _distribution_summary(
+            pca_score
+        ),
+        "pca_digit_manifold_score_values": [
+            float(value)
+            for value in pca_score.detach().cpu().tolist()
+        ],
         "classifier_independent_morphology": (
             _morphology_diagnostics(
                 samples, recognizer["pixel_reference"]
@@ -625,6 +734,10 @@ def run_mnist_suite() -> dict[str, Any]:
             "feature_mean",
             "feature_std",
             "pixel_reference",
+            "pca_mean",
+            "pca_basis",
+            "pca_variance",
+            "pca_residual_scale",
         }
     }
     result = {

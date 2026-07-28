@@ -55,7 +55,7 @@ def main() -> int:
                     3: "symbolic Gaussian integration plus independent Monte Carlo",
                     4: "independent paired-seed wall-clock comparison",
                     5: "independent objective, tracking-error, and large-beta checks",
-                    6: "finite-grid paired reward and classifier-independent morphology checks",
+                    6: "finite-grid paired reward and one-class PCA digit-manifold certificate",
                 }[claim],
                 "passed": result["passed"],
                 "details": result,

@@ -17,9 +17,10 @@
     "Run all 12 reward/beta cells from the same checkpoint and guarded identical initial particles.",
     "For every cell, the paired 95% interval for terminal fresh reward minus pretrained fresh reward is strictly positive under the original pretraining sampler.",
     "A separately trained MNIST recognizer must achieve at least 97% test accuracy.",
-    "For every cell, tuned samples pass classifier-independent pixel morphology limits calibrated only from held-out real MNIST and the pretrained EBM: at least 50% of the smaller real/baseline median pixel standard deviation and total variation, and multiscale pixel-support distance no greater than max(real-test q95, 1.5 times baseline median distance).",
-    "Exact reward-maximizing constant or half-plane images must fail at least one classifier-independent morphology limit while attaining at least the largest tuned reward.",
+    "Fit a deterministic 64-component PCA digit manifold on 5,000 balanced real MNIST training images. Define the anomaly score as mean standardized squared PCA coefficient plus reconstruction MSE divided by the training-median residual. Fix its limit at max(held-out-real q99, pretrained-baseline q95), excluding tuned samples and controls.",
+    "A verification requires every tuned cell's anomaly-score q95 to remain at or below the fixed limit. A falsification requires at least one exact cell's 95% order-statistic interval for the median anomaly score to lie strictly above the limit while its paired fresh-reward interval is strictly positive.",
+    "The exact reward-maximizing constant or half-plane image and an unseen fixed pixel-shuffling corruption of held-out real digits must lie above the anomaly-score limit, while the pretrained baseline remains below it.",
     "Swapping pretrained and tuned reward labels must fail the every-cell reward-improvement check."
   ],
-  "verdict_rule": "VERIFIED only if every finite-grid, kernel, recognizer, anti-hacking, initialization, and negative-control check passes; otherwise BLOCKED unless an assumption-satisfying contradiction is independently established."
+  "verdict_rule": "VERIFIED only if every finite-grid, kernel, recognizer, digit-manifold, initialization, and negative-control check passes. FALSIFIED if all exact setup and control checks pass and at least one reward-improving finite-grid cell has its median PCA digit-manifold anomaly-score interval strictly beyond the independently fixed limit. Otherwise BLOCKED."
 }

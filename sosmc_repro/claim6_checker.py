@@ -11,6 +11,34 @@ DIGIT_DISTANCE_MULTIPLIER = 1.5
 MORPHOLOGY_RETENTION_MINIMUM = 0.5
 
 
+def _median_interval(values: list[float]) -> dict[str, float]:
+    """Conservative normal-approximation order-statistic interval."""
+    ordered = sorted(float(value) for value in values)
+    count = len(ordered)
+    if count < 16:
+        return {
+            "count": count,
+            "median": float("nan"),
+            "ci95_low": float("-inf"),
+            "ci95_high": float("inf"),
+        }
+    half_width = 1.96 * (count * 0.25) ** 0.5
+    low_index = max(0, int(count * 0.5 - half_width) - 1)
+    high_index = min(
+        count - 1, int(count * 0.5 + half_width) + 1
+    )
+    return {
+        "count": count,
+        "median": ordered[(count - 1) // 2],
+        "ci95_low": ordered[low_index],
+        "ci95_high": ordered[high_index],
+        "method": (
+            "95% binomial-normal order-statistic interval for the "
+            "population median"
+        ),
+    }
+
+
 def _check(result: dict[str, Any]) -> dict[str, Any]:
     rows = result.get("raw_rows", [])
     by_key = {
@@ -20,6 +48,7 @@ def _check(result: dict[str, Any]) -> dict[str, Any]:
     complete_grid = set(by_key) == expected
     reward_checks: dict[str, bool] = {}
     structure_checks: dict[str, bool] = {}
+    falsification_checks: dict[str, bool] = {}
     structure_audit: dict[str, Any] = {}
     beta_order_audit: dict[str, Any] = {}
     recognizer = result.get("recognizer", {})
@@ -44,6 +73,20 @@ def _check(result: dict[str, Any]) -> dict[str, Any]:
         .get("real_test_support_distance", {})
         .get("q95", float("inf"))
     )
+    pca_real = recognizer.get(
+        "pca_real_test_digit_manifold_score", {}
+    )
+    pca_shuffled = recognizer.get(
+        "pca_shuffled_real_digit_manifold_score", {}
+    )
+    pca_real_q99 = float(pca_real.get("q99", float("inf")))
+    pca_calibration_valid = (
+        recognizer.get("pca_components") == 64
+        and recognizer.get("pca_training_images") == 5000
+        and recognizer.get("pca_seed") == 2026072722
+        and 0.0 < pca_real_q99 < float("inf")
+    )
+    shuffled_control_checks: dict[str, bool] = {}
     for reward in REWARDS:
         ordered_means = []
         for beta in BETAS:
@@ -116,45 +159,123 @@ def _check(result: dict[str, Any]) -> dict[str, Any]:
                 hacked["reward_mean"]
                 >= row["post_reward"]["maximum"] - 1e-7
             )
+            baseline_pca = baseline[
+                "pca_digit_manifold_score"
+            ]
+            tuned_pca = tuned["pca_digit_manifold_score"]
+            hacked_pca = hacked["pca_digit_manifold_score"]
+            pca_limit = max(
+                pca_real_q99,
+                float(baseline_pca.get("q95", float("inf"))),
+            )
+            tuned_pca_interval = _median_interval(
+                tuned.get(
+                    "pca_digit_manifold_score_values", []
+                )
+            )
+            hacked_pca_interval = _median_interval(
+                hacked.get(
+                    "pca_digit_manifold_score_values", []
+                )
+            )
+            pca_tuned_preserved = (
+                float(tuned_pca.get("q95", float("inf")))
+                <= pca_limit
+            )
+            pca_tuned_outside = (
+                tuned_pca_interval["ci95_low"] > pca_limit
+            )
+            pca_hack_rejected = (
+                hacked_pca_interval["ci95_low"] > pca_limit
+            )
+            shuffled_rejected = (
+                float(pca_shuffled.get("q05", float("-inf")))
+                > pca_limit
+            )
+            baseline_accepted = (
+                float(baseline_pca.get("median", float("inf")))
+                <= pca_limit
+            )
             structure_checks[key] = (
-                tuned_digit_like
-                and not hacked_digit_like
+                pca_tuned_preserved
+                and pca_hack_rejected
+                and shuffled_rejected
+                and baseline_accepted
                 and hacked_reward_maximal
             )
+            falsification_checks[key] = (
+                reward_checks[key]
+                and pca_tuned_outside
+                and pca_hack_rejected
+                and shuffled_rejected
+                and baseline_accepted
+                and hacked_reward_maximal
+            )
+            shuffled_control_checks[key] = shuffled_rejected
             structure_audit[key] = {
-                "thresholds_calibrated_without_tuned_samples": {
-                    "pixel_standard_deviation_median_minimum": (
-                        pixel_std_floor
+                "one_class_pca_certificate": {
+                    "threshold": pca_limit,
+                    "threshold_rule": (
+                        "max(held-out-real q99, pretrained-baseline "
+                        "q95); tuned samples and controls excluded"
                     ),
-                    "total_variation_median_minimum": (
-                        total_variation_floor
+                    "baseline": baseline_pca,
+                    "tuned": tuned_pca,
+                    "tuned_median_interval": tuned_pca_interval,
+                    "reward_maximizing_control": hacked_pca,
+                    "reward_maximizing_control_median_interval": (
+                        hacked_pca_interval
                     ),
-                    "multiscale_pixel_support_median_maximum": (
-                        support_limit
+                    "pixel_shuffled_real_control": pca_shuffled,
+                    "baseline_accepted": baseline_accepted,
+                    "tuned_q95_within_digit_manifold": (
+                        pca_tuned_preserved
+                    ),
+                    "tuned_median_outside_digit_manifold": (
+                        pca_tuned_outside
+                    ),
+                    "reward_maximizer_rejected": (
+                        pca_hack_rejected
+                    ),
+                    "unseen_pixel_shuffle_rejected": (
+                        shuffled_rejected
                     ),
                 },
-                "tuned": tuned_morphology,
-                "reward_maximizing_control": hacked_morphology,
-                "tuned_digit_like": tuned_digit_like,
-                "reward_maximizing_control_digit_like": (
-                    hacked_digit_like
-                ),
-                "reward_maximizing_control_reward_maximal": (
-                    hacked_reward_maximal
-                ),
-                "classifier_diagnostics_not_used_for_acceptance": {
-                    "tuned_confidence_median": tuned[
-                        "classifier_confidence_median"
-                    ],
-                    "tuned_predicted_class_count": tuned[
-                        "predicted_class_count"
-                    ],
-                    "legacy_feature_support_median": tuned[
-                        "support_distance_median"
-                    ],
-                    "legacy_real_feature_support_q95": (
-                        feature_real_q95
+                "route_2_morphology_diagnostic_not_used_for_route_3": {
+                    "thresholds_calibrated_without_tuned_samples": {
+                        "pixel_standard_deviation_median_minimum": (
+                            pixel_std_floor
+                        ),
+                        "total_variation_median_minimum": (
+                            total_variation_floor
+                        ),
+                        "multiscale_pixel_support_median_maximum": (
+                            support_limit
+                        ),
+                    },
+                    "tuned": tuned_morphology,
+                    "reward_maximizing_control": hacked_morphology,
+                    "tuned_digit_like": tuned_digit_like,
+                    "reward_maximizing_control_digit_like": (
+                        hacked_digit_like
                     ),
+                    "reward_maximizing_control_reward_maximal": (
+                        hacked_reward_maximal
+                    ),
+                    "classifier_diagnostics_not_used_for_acceptance": {
+                        "tuned_confidence_median": tuned[
+                            "classifier_confidence_median"
+                        ],
+                        "tuned_predicted_class_count": tuned[
+                            "predicted_class_count"
+                        ],
+                        "legacy_feature_support_median": tuned[
+                            "support_distance_median"
+                        ],
+                        "legacy_real_feature_support_q95": (
+                            feature_real_q95
+                        ),
+                    },
                 },
             }
             ordered_means.append(row["post_reward"]["mean"])
@@ -215,19 +336,46 @@ def _check(result: dict[str, Any]) -> dict[str, Any]:
             len(reward_checks) == len(expected)
             and all(reward_checks.values())
         ),
-        "digit_structure_preserved_and_hack_controls_rejected": (
-            len(structure_checks) == len(expected)
-            and all(structure_checks.values())
+        "one_class_pca_calibration_valid": pca_calibration_valid,
+        "unseen_pixel_shuffle_rejected": (
+            len(shuffled_control_checks) == len(expected)
+            and all(shuffled_control_checks.values())
         ),
         "independent_recognizer_valid": recognizer_valid,
         "pretraining_tuning_kernel_mismatch_exact": mismatch_exact,
         "shared_initialization_guarded": guarded_initialization,
     }
+    prerequisites_passed = all(checks.values())
+    verification_passed = (
+        prerequisites_passed
+        and len(structure_checks) == len(expected)
+        and all(structure_checks.values())
+    )
+    counterexample_cells = [
+        key
+        for key, established in falsification_checks.items()
+        if established
+    ]
+    falsification_passed = (
+        prerequisites_passed and bool(counterexample_cells)
+    )
+    passed = verification_passed or falsification_passed
+    if falsification_passed:
+        verdict = "FALSIFIED"
+    elif verification_passed:
+        verdict = "VERIFIED"
+    else:
+        verdict = "BLOCKED"
     return {
-        "passed": all(checks.values()),
+        "passed": passed,
+        "verdict": verdict,
         "checks": checks,
         "reward_checks": reward_checks,
         "structure_checks": structure_checks,
+        "falsification_checks": falsification_checks,
+        "counterexample_cells": counterexample_cells,
+        "verification_passed": verification_passed,
+        "falsification_passed": falsification_passed,
         "structure_audit": structure_audit,
         "beta_order_audit": beta_order_audit,
         "fixed_thresholds": {
@@ -237,6 +385,17 @@ def _check(result: dict[str, Any]) -> dict[str, Any]:
             "digit_distance_multiplier": DIGIT_DISTANCE_MULTIPLIER,
             "morphology_retention_minimum": (
                 MORPHOLOGY_RETENTION_MINIMUM
+            ),
+            "pca_components": 64,
+            "pca_training_images": 5000,
+            "pca_seed": 2026072722,
+            "pca_digit_manifold_score_threshold": (
+                "max(held-out-real q99, pretrained-baseline q95)"
+            ),
+            "pca_falsification_rule": (
+                "the 95% order-statistic interval lower endpoint "
+                "for the tuned median residual exceeds the fixed "
+                "threshold"
             ),
             "threshold_calibration": (
                 "held-out real MNIST and pretrained EBM only; tuned "
@@ -277,7 +436,7 @@ def evaluate(result: dict[str, Any]) -> dict[str, Any]:
         and negative_control["failed_for_intended_reason"]
     )
     return {
-        "verdict": "VERIFIED" if passed else "BLOCKED",
+        "verdict": direct["verdict"] if passed else "BLOCKED",
         "passed": passed,
         "direct_checks": direct,
         "negative_control": negative_control,
