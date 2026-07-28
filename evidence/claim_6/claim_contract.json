@@ -17,8 +17,8 @@
     "Run all 12 reward/beta cells from the same checkpoint and guarded identical initial particles.",
     "For every cell, the paired 95% interval for terminal fresh reward minus pretrained fresh reward is strictly positive under the original pretraining sampler.",
     "A separately trained MNIST recognizer must achieve at least 97% test accuracy.",
-    "For every cell, tuned samples retain at least half the baseline median classifier confidence and have median standardized recognizer-feature support distance no greater than max(real-test q95, 1.5 times baseline median distance).",
-    "Reward-maximizing constant or half-plane images must exceed the digit-support distance limit and therefore fail the anti-hacking check.",
+    "For every cell, tuned samples pass classifier-independent pixel morphology limits calibrated only from held-out real MNIST and the pretrained EBM: at least 50% of the smaller real/baseline median pixel standard deviation and total variation, and multiscale pixel-support distance no greater than max(real-test q95, 1.5 times baseline median distance).",
+    "Exact reward-maximizing constant or half-plane images must fail at least one classifier-independent morphology limit while attaining at least the largest tuned reward.",
     "Swapping pretrained and tuned reward labels must fail the every-cell reward-improvement check."
   ],
   "verdict_rule": "VERIFIED only if every finite-grid, kernel, recognizer, anti-hacking, initialization, and negative-control check passes; otherwise BLOCKED unless an assumption-satisfying contradiction is independently established."

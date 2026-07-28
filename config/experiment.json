@@ -2,5 +2,5 @@
   "stage": "claim_6_mnist",
   "accepted_claims": [1, 2, 3, 4, 5, 6],
   "seed": 20260726,
-  "description": "Cumulative CPU-only verification through Claim 6. Rerun Claims 1-5, including the self-contained circles small/large-beta verifier, then execute SOSMC-ULA on the official checkpointed convolutional MNIST EBM across the exact three-reward by four-beta grid. Evaluate terminal fresh reward with three paired seeds under the distinct original pretraining sampler and reject reward-maximizing non-digit controls using an independently trained and validated MNIST recognizer plus feature-support distance."
+  "description": "Cumulative CPU-only verification through Claim 6. Rerun Claims 1-5, including the self-contained circles small/large-beta verifier, then execute the authors' saved 3e-3 SOSMC-ULA sweep on the official checkpointed convolutional MNIST EBM across the exact three-reward by four-beta grid. Evaluate terminal fresh reward with three paired seeds under the distinct original pretraining sampler. Use a separately validated recognizer only as a semantic diagnostic; decide anti-hacking acceptance with classifier-independent pixel morphology calibrated from held-out real MNIST and pretrained EBM samples."
 }

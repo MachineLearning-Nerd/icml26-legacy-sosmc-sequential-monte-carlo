@@ -8,7 +8,7 @@ REWARDS = ("bright", "dark", "lower_half")
 BETAS = (5.0, 2.0, 1.0, 0.5)
 CLASSIFIER_ACCURACY_MINIMUM = 0.97
 DIGIT_DISTANCE_MULTIPLIER = 1.5
-CONFIDENCE_RETENTION_MINIMUM = 0.5
+MORPHOLOGY_RETENTION_MINIMUM = 0.5
 
 
 def _check(result: dict[str, Any]) -> dict[str, Any]:
@@ -20,8 +20,26 @@ def _check(result: dict[str, Any]) -> dict[str, Any]:
     complete_grid = set(by_key) == expected
     reward_checks: dict[str, bool] = {}
     structure_checks: dict[str, bool] = {}
+    structure_audit: dict[str, Any] = {}
     beta_order_audit: dict[str, Any] = {}
-    real_q95 = float(
+    recognizer = result.get("recognizer", {})
+    real_morphology = recognizer.get("real_test_morphology", {})
+    real_support_q95 = float(
+        real_morphology
+        .get("multiscale_pixel_support_distance", {})
+        .get("q95", float("inf"))
+    )
+    real_pixel_std_median = float(
+        real_morphology
+        .get("pixel_standard_deviation", {})
+        .get("median", 0.0)
+    )
+    real_total_variation_median = float(
+        real_morphology
+        .get("total_variation", {})
+        .get("median", 0.0)
+    )
+    feature_real_q95 = float(
         result.get("recognizer", {})
         .get("real_test_support_distance", {})
         .get("q95", float("inf"))
@@ -45,23 +63,100 @@ def _check(result: dict[str, Any]) -> dict[str, Any]:
             baseline = row["digit_structure"]["baseline"]
             tuned = row["digit_structure"]["tuned"]
             hacked = row["digit_structure"]["reward_maximizing_control"]
-            distance_limit = max(
-                real_q95,
+            baseline_morphology = baseline[
+                "classifier_independent_morphology"
+            ]
+            tuned_morphology = tuned[
+                "classifier_independent_morphology"
+            ]
+            hacked_morphology = hacked[
+                "classifier_independent_morphology"
+            ]
+            support_limit = max(
+                real_support_q95,
                 DIGIT_DISTANCE_MULTIPLIER
-                * baseline["support_distance_median"],
+                * baseline_morphology[
+                    "multiscale_pixel_support_distance"
+                ]["median"],
             )
-            confidence_floor = (
-                CONFIDENCE_RETENTION_MINIMUM
-                * baseline["classifier_confidence_median"]
+            pixel_std_floor = MORPHOLOGY_RETENTION_MINIMUM * min(
+                real_pixel_std_median,
+                baseline_morphology[
+                    "pixel_standard_deviation"
+                ]["median"],
             )
-            structure_checks[key] = (
-                tuned["support_distance_median"] <= distance_limit
-                and tuned["classifier_confidence_median"]
-                >= confidence_floor
-                and hacked["support_distance_median"] > distance_limit
-                and hacked["reward_mean"]
+            total_variation_floor = (
+                MORPHOLOGY_RETENTION_MINIMUM
+                * min(
+                    real_total_variation_median,
+                    baseline_morphology["total_variation"]["median"],
+                )
+            )
+            tuned_digit_like = (
+                tuned_morphology["pixel_standard_deviation"]["median"]
+                >= pixel_std_floor
+                and tuned_morphology["total_variation"]["median"]
+                >= total_variation_floor
+                and tuned_morphology[
+                    "multiscale_pixel_support_distance"
+                ]["median"]
+                <= support_limit
+            )
+            hacked_digit_like = (
+                hacked_morphology["pixel_standard_deviation"]["median"]
+                >= pixel_std_floor
+                and hacked_morphology["total_variation"]["median"]
+                >= total_variation_floor
+                and hacked_morphology[
+                    "multiscale_pixel_support_distance"
+                ]["median"]
+                <= support_limit
+            )
+            hacked_reward_maximal = (
+                hacked["reward_mean"]
                 >= row["post_reward"]["maximum"] - 1e-7
             )
+            structure_checks[key] = (
+                tuned_digit_like
+                and not hacked_digit_like
+                and hacked_reward_maximal
+            )
+            structure_audit[key] = {
+                "thresholds_calibrated_without_tuned_samples": {
+                    "pixel_standard_deviation_median_minimum": (
+                        pixel_std_floor
+                    ),
+                    "total_variation_median_minimum": (
+                        total_variation_floor
+                    ),
+                    "multiscale_pixel_support_median_maximum": (
+                        support_limit
+                    ),
+                },
+                "tuned": tuned_morphology,
+                "reward_maximizing_control": hacked_morphology,
+                "tuned_digit_like": tuned_digit_like,
+                "reward_maximizing_control_digit_like": (
+                    hacked_digit_like
+                ),
+                "reward_maximizing_control_reward_maximal": (
+                    hacked_reward_maximal
+                ),
+                "classifier_diagnostics_not_used_for_acceptance": {
+                    "tuned_confidence_median": tuned[
+                        "classifier_confidence_median"
+                    ],
+                    "tuned_predicted_class_count": tuned[
+                        "predicted_class_count"
+                    ],
+                    "legacy_feature_support_median": tuned[
+                        "support_distance_median"
+                    ],
+                    "legacy_real_feature_support_q95": (
+                        feature_real_q95
+                    ),
+                },
+            }
             ordered_means.append(row["post_reward"]["mean"])
         beta_order_audit[reward] = {
             "betas_high_to_low": list(BETAS),
@@ -82,7 +177,6 @@ def _check(result: dict[str, Any]) -> dict[str, Any]:
             ),
         }
 
-    recognizer = result.get("recognizer", {})
     recognizer_valid = (
         recognizer.get("test_accuracy", 0.0)
         >= CLASSIFIER_ACCURACY_MINIMUM
@@ -100,7 +194,7 @@ def _check(result: dict[str, Any]) -> dict[str, Any]:
         and kernel.get("tuning_sampler")
         == {
             "kernel": "pure Gaussian ULA",
-            "step_size": 0.005,
+            "step_size": 0.003,
             "noise_scale": 1.0,
             "gradient_clip": None,
             "state_clamp": None,
@@ -134,14 +228,19 @@ def _check(result: dict[str, Any]) -> dict[str, Any]:
         "checks": checks,
         "reward_checks": reward_checks,
         "structure_checks": structure_checks,
+        "structure_audit": structure_audit,
         "beta_order_audit": beta_order_audit,
         "fixed_thresholds": {
             "classifier_test_accuracy_minimum": (
                 CLASSIFIER_ACCURACY_MINIMUM
             ),
             "digit_distance_multiplier": DIGIT_DISTANCE_MULTIPLIER,
-            "confidence_retention_minimum": (
-                CONFIDENCE_RETENTION_MINIMUM
+            "morphology_retention_minimum": (
+                MORPHOLOGY_RETENTION_MINIMUM
+            ),
+            "threshold_calibration": (
+                "held-out real MNIST and pretrained EBM only; tuned "
+                "samples and reward-maximizing controls are excluded"
             ),
         },
     }

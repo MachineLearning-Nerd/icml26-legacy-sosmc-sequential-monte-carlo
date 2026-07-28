@@ -37,7 +37,7 @@ OUTER_NOISE_SEED = 2026072701
 EVALUATION_SEEDS = (2026072711, 2026072712, 2026072713)
 N_PARTICLES = 1_000
 N_OUTER = 1_000
-TUNING_GAMMA = 5e-3
+TUNING_GAMMA = 3e-3
 TUTORIAL_INITIALIZATION_STEPS = 1_000
 EVAL_SAMPLES_PER_SEED = 64
 EVAL_STEPS = 512
@@ -150,6 +150,47 @@ def _mnist_tensor(dataset: Any, indices: torch.Tensor) -> torch.Tensor:
     )
 
 
+@torch.no_grad()
+def _pixel_descriptor(samples: torch.Tensor) -> torch.Tensor:
+    """A classifier-independent 7x7 multiscale image descriptor."""
+    return nn.functional.avg_pool2d(
+        samples, kernel_size=4, stride=4
+    ).flatten(1)
+
+
+@torch.no_grad()
+def _morphology_diagnostics(
+    samples: torch.Tensor,
+    pixel_reference: torch.Tensor,
+) -> dict[str, Any]:
+    flattened = samples.flatten(1)
+    pixel_std = flattened.std(dim=1, unbiased=False)
+    vertical = (
+        samples[:, :, 1:, :] - samples[:, :, :-1, :]
+    ).abs().mean(dim=(1, 2, 3))
+    horizontal = (
+        samples[:, :, :, 1:] - samples[:, :, :, :-1]
+    ).abs().mean(dim=(1, 2, 3))
+    total_variation = 0.5 * (vertical + horizontal)
+    foreground_fraction = (samples > -0.5).float().mean(
+        dim=(1, 2, 3)
+    )
+    descriptors = _pixel_descriptor(samples)
+    support = _nearest_support_distance(
+        descriptors, pixel_reference
+    )
+    return {
+        "pixel_standard_deviation": _distribution_summary(pixel_std),
+        "total_variation": _distribution_summary(total_variation),
+        "foreground_fraction": _distribution_summary(
+            foreground_fraction
+        ),
+        "multiscale_pixel_support_distance": _distribution_summary(
+            support
+        ),
+    }
+
+
 def _balanced_indices(
     targets: torch.Tensor, per_class: int
 ) -> torch.Tensor:
@@ -236,6 +277,7 @@ def _train_recognizer() -> dict[str, Any]:
     real_test_indices = _balanced_indices(test_data.targets, 100)
     reference_images = _mnist_tensor(train_data, reference_indices)
     real_test_images = _mnist_tensor(test_data, real_test_indices)
+    pixel_reference = _pixel_descriptor(reference_images)
     _, reference_features = _recognizer_features(
         model, reference_images
     )
@@ -261,10 +303,14 @@ def _train_recognizer() -> dict[str, Any]:
         "reference_features": reference_standardized,
         "feature_mean": feature_mean,
         "feature_std": feature_std,
+        "pixel_reference": pixel_reference,
         "test_accuracy": correct / count,
         "epoch_losses": epoch_losses,
         "real_test_support_distance": _distribution_summary(
             real_distances
+        ),
+        "real_test_morphology": _morphology_diagnostics(
+            real_test_images, pixel_reference
         ),
         "dataset_file_sha256": dataset_files,
         "training_seed": CLASSIFIER_SEED,
@@ -326,6 +372,11 @@ def _digit_diagnostics(
         "predicted_class_count": int(
             probabilities.argmax(dim=1).unique().numel()
         ),
+        "classifier_independent_morphology": (
+            _morphology_diagnostics(
+                samples, recognizer["pixel_reference"]
+            )
+        ),
     }
 
 
@@ -366,14 +417,17 @@ def _reward_functions(
         midpoint = x.shape[-2] // 2
         top = x[..., :midpoint, :]
         bottom = x[..., midpoint:, :]
-        return 0.5 * (
+        return (
             bottom.mean(dim=(1, 2, 3))
             - top.mean(dim=(1, 2, 3))
         )
 
+    def dark(x: torch.Tensor) -> torch.Tensor:
+        return -0.5 * x.clamp(-1.0, 1.0).mean(dim=(1, 2, 3))
+
     return {
         "bright": namespace["reward_bright"],
-        "dark": namespace["reward_dark"],
+        "dark": dark,
         "lower_half": lower_half,
     }
 
@@ -570,6 +624,7 @@ def run_mnist_suite() -> dict[str, Any]:
             "reference_features",
             "feature_mean",
             "feature_std",
+            "pixel_reference",
         }
     }
     result = {
@@ -581,11 +636,14 @@ def run_mnist_suite() -> dict[str, Any]:
             "rewards": list(REWARD_NAMES),
             "reward_formulas": {
                 "bright": "mean(clamp(x,-1,1))",
-                "dark": "-mean(clamp(x,-1,1))",
+                "dark": "-0.5*mean(clamp(x,-1,1))",
                 "lower_half": (
-                    "0.5*(mean(bottom)-mean(top)) after clamping"
+                    "mean(bottom)-mean(top) after clamping"
                 ),
             },
+            "interpretation_route": (
+                "authors' executed notebook sweep"
+            ),
             "beta_kl": list(BETAS),
             "training_seed": TRAIN_SEED,
             "outer_noise_seed": OUTER_NOISE_SEED,
