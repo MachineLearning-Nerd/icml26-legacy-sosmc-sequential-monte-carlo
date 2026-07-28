@@ -1,4 +1,6 @@
 .gitattributes
+MANIFEST.candidate.sha256
+MANIFEST.sha256
 README.md
 RED_TEAM.md
 RELEASE_REPORT.md
@@ -74,6 +76,7 @@ evidence/claim_6/raw_output.json
 evidence/claim_6/runtime.json
 evidence/claim_6/source_audit.md
 historical/judged-space-859b3272122d1b3d9b97fa711eb82cbf121567f5/.gitattributes
+historical/judged-space-859b3272122d1b3d9b97fa711eb82cbf121567f5/MANIFEST.sha256
 historical/judged-space-859b3272122d1b3d9b97fa711eb82cbf121567f5/README.md
 historical/judged-space-859b3272122d1b3d9b97fa711eb82cbf121567f5/bucket-icon.svg
 historical/judged-space-859b3272122d1b3d9b97fa711eb82cbf121567f5/index.html

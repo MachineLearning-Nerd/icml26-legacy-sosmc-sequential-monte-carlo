@@ -60,7 +60,17 @@ def sha256(path: Path) -> str:
 def make_figures(result: dict) -> None:
     images = REPORT_DIR / "images"
     images.mkdir(parents=True, exist_ok=True)
-    plt.rcParams.update({"font.size": 10, "svg.fonttype": "none"})
+    plt.rcParams.update(
+        {
+            "font.size": 10,
+            "svg.fonttype": "none",
+            "svg.hashsalt": "sosmc-reproduction-2601.22003",
+        }
+    )
+
+    def save_svg(fig: plt.Figure, path: Path) -> None:
+        fig.savefig(path, metadata={"Date": "2026-07-28"})
+        plt.close(fig)
 
     fig, ax = plt.subplots(figsize=(9, 3.2))
     verdicts = ["VERIFIED"] * 5 + ["FALSIFIED"]
@@ -76,8 +86,7 @@ def make_figures(result: dict) -> None:
     for spine in ax.spines.values():
         spine.set_visible(False)
     fig.tight_layout()
-    fig.savefig(images / "headline_verdicts.svg")
-    plt.close(fig)
+    save_svg(fig, images / "headline_verdicts.svg")
 
     c4 = result["claim_results"]["4"]["independent_checker"]["summaries"]
     settings = ["dual_smooth", "dual_hard", "sparse_hard", "tight_tight"]
@@ -92,8 +101,7 @@ def make_figures(result: dict) -> None:
     ax.set_title("Claim 4: SOSMC-ULA exceeds ImpDiff in all four settings")
     ax.legend(frameon=False)
     fig.tight_layout()
-    fig.savefig(images / "claim4_wallclock.svg")
-    plt.close(fig)
+    save_svg(fig, images / "claim4_wallclock.svg")
 
     c5 = result["claim_results"]["5"]["independent_checker"]
     fig, axes = plt.subplots(1, 2, figsize=(9, 3.8))
@@ -117,8 +125,7 @@ def make_figures(result: dict) -> None:
         f"({best['ImpDiff']:.4f} vs {best['SOSMC-ULA']:.4f})"
     )
     fig.tight_layout()
-    fig.savefig(images / "claim5_objective_tracking.svg")
-    plt.close(fig)
+    save_svg(fig, images / "claim5_objective_tracking.svg")
 
     rows = result["claim_results"]["6"]["raw_rows"]
     fig, ax = plt.subplots(figsize=(9, 4.5))
@@ -146,8 +153,7 @@ def make_figures(result: dict) -> None:
     ax.set_title("Claim 6: reward increases in all 12 MNIST cells")
     ax.legend(frameon=False)
     fig.tight_layout()
-    fig.savefig(images / "claim6_reward_grid.svg")
-    plt.close(fig)
+    save_svg(fig, images / "claim6_reward_grid.svg")
 
     audit = result["claim_results"]["6"]["independent_checker"][
         "direct_checks"
@@ -178,8 +184,7 @@ def make_figures(result: dict) -> None:
     ax.set_title("Claim 6 counterexample: intervals lie above the fixed limit")
     ax.legend(frameon=False)
     fig.tight_layout()
-    fig.savefig(images / "claim6_counterexample.svg")
-    plt.close(fig)
+    save_svg(fig, images / "claim6_counterexample.svg")
     for image in images.glob("*.svg"):
         image.write_text(
             "\n".join(line.rstrip() for line in image.read_text().splitlines())
@@ -669,7 +674,7 @@ def manifests() -> None:
     files = sorted(path for path in SPACE.rglob("*") if path.is_file())
     allowed_suffixes = {
         ".md", ".json", ".css", ".js", ".html", ".svg", ".py", ".toml",
-        ".lock", ".txt", ".csv", ".gitattributes",
+        ".lock", ".txt", ".csv", ".sha256", ".gitattributes",
     }
     allow = [
         path.relative_to(SPACE).as_posix()
