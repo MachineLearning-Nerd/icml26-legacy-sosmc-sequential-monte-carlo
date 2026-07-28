@@ -1,0 +1,19 @@
+{
+  "claim_id": 2,
+  "paper_anchor": "Section 4.1, Proposition 1 (#Thmproposition1), Equation 17",
+  "source_correction": "The live judge calls this Proposition 2, but the retrieved paper labels it Proposition 1.",
+  "assumptions": [
+    "Z_theta is finite for every theta.",
+    "A1: the loss is L-smooth and mu-Polyak-Lojasiewicz.",
+    "The idealized SOSMC iterates use the exact distributions and reduce to exact gradient descent by Lemma 1.",
+    "0 < gamma <= 1/L."
+  ],
+  "quantifier": "For every integer k >= 0.",
+  "conclusion": "l(theta_k)-inf l <= (1-gamma*mu)^k (l(theta_0)-inf l).",
+  "acceptance": [
+    "Machine-check the symbolic one-step implication from smoothness, the step-size condition, and PL.",
+    "Induct the one-step contraction to arbitrary k.",
+    "Use exact arithmetic for a calibration grid independent of the claimed formula.",
+    "Negative controls must break the certificate when gamma or PL is removed."
+  ]
+}

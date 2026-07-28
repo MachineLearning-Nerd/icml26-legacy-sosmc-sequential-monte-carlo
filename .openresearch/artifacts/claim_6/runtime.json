@@ -1,0 +1,18 @@
+{
+  "claim_runtime_seconds": 4992.996501432033,
+  "run_id": "199652d8-ec32-4192-a79f-d76f5ea9a46f",
+  "run_provenance": {
+    "cpu_allocation": {
+      "affinity_count": 64,
+      "cgroup_quota_cores": 8.0,
+      "os_cpu_count": 64
+    },
+    "cuda_visible": false,
+    "device_policy": "CPU only",
+    "git_sha": "990cb3d8afd53accb03a9e48f0c57e2842137785",
+    "platform": "Linux-6.12.90-120.164.amzn2023.x86_64-x86_64-with-glibc2.41",
+    "python": "3.12.13",
+    "runtime_seconds": 7644.540682936087,
+    "seed": 20260726
+  }
+}

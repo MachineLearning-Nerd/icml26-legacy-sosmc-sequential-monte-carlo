@@ -1,0 +1,1551 @@
+{
+  "claim_results": {
+    "2": {
+      "claim": "Paper Proposition 1 linear convergence under A1",
+      "exact_quadratic_grid": {
+        "L_values": 12,
+        "eigenvalues": "all integers mu..L",
+        "gamma_fractions_of_1_over_L": [
+          "1/4",
+          "1/2",
+          "1"
+        ],
+        "mu_per_L": "all integers 1..L",
+        "violations": []
+      },
+      "negative_controls": {
+        "bad_claimed_bound": "3/4",
+        "bad_contraction": "9/4",
+        "gamma_above_1_over_L_breaks_certificate": true,
+        "gamma_bad": "1/4",
+        "non_pl_gradient_ratio_tends_to_zero": true,
+        "non_pl_ratios": [
+          2.0,
+          0.020000000000000004,
+          0.00020000000000000004,
+          2e-06
+        ]
+      },
+      "passed": true,
+      "symbolic_certificate": {
+        "assumptions": [
+          "L-smooth loss",
+          "mu-PL: ||grad l||^2 >= 2 mu (l-inf l)",
+          "0 < gamma <= 1/L",
+          "idealized SOSMC update equals exact gradient descent by Lemma 1"
+        ],
+        "descent_to_half_step_identity": "0",
+        "pl_substitution_identity": "0"
+      },
+      "verdict": "VERIFIED"
+    },
+    "3": {
+      "claim": "Paper Equation 19 for equal-covariance Gaussian targets",
+      "independent_monte_carlo": [
+        {
+          "dimension": 1,
+          "empirical_chi2_plus_one": 1.2191648113378668,
+          "exact_chi2_plus_one": 1.2244600851219147,
+          "relative_error": 0.00432457852108809
+        },
+        {
+          "dimension": 2,
+          "empirical_chi2_plus_one": 1.2276771537902815,
+          "exact_chi2_plus_one": 1.224460085121915,
+          "relative_error": 0.0026273364950448854
+        },
+        {
+          "dimension": 5,
+          "empirical_chi2_plus_one": 1.2268291088354266,
+          "exact_chi2_plus_one": 1.224460085121915,
+          "relative_error": 0.0019347496437793555
+        },
+        {
+          "dimension": 11,
+          "empirical_chi2_plus_one": 1.2275560347276029,
+          "exact_chi2_plus_one": 1.2244600851219147,
+          "relative_error": 0.0025284201937704662
+        }
+      ],
+      "max_relative_error": 0.00432457852108809,
+      "negative_controls": {
+        "actual_chi2": 0.0206207261596576,
+        "equation_19_wrongly_extended_chi2": 0.0,
+        "unequal_covariance_invalidates_equal_covariance_formula": true,
+        "variance_p": 1.2,
+        "variance_q": 1.0
+      },
+      "passed": true,
+      "symbolic_univariate_whitened_identity": "0",
+      "verdict": "VERIFIED"
+    },
+    "4": {
+      "claim": "Section 5.1 wall-clock Langevin reward tuning",
+      "independent_checker": {
+        "checks": {
+          "figure_1a_sosmc_sd_below_soul": true,
+          "figure_1b_soul_mode_failure_not_seen_for_sosmc": true,
+          "sosmc_mean_exceeds_impdiff_all_four_settings": {
+            "dual_hard": true,
+            "dual_smooth": true,
+            "sparse_hard": true,
+            "tight_tight": true
+          }
+        },
+        "negative_control": {
+          "failed_as_intended": true,
+          "reversed_label_checks": {
+            "dual_hard": false,
+            "dual_smooth": false,
+            "sparse_hard": false,
+            "tight_tight": false
+          }
+        },
+        "passed": true,
+        "summaries": {
+          "dual_hard": {
+            "ImpDiff_Adam": {
+              "ci95": [
+                0.01727023805862962,
+                0.01740222450905742
+              ],
+              "mean": 0.01733623128384352,
+              "n": 10,
+              "sd": 9.225857728398735e-05,
+              "values": [
+                0.017277248203754425,
+                0.017198096960783005,
+                0.0173439159989357,
+                0.017396962270140648,
+                0.017372647300362587,
+                0.01736171916127205,
+                0.01735549420118332,
+                0.01752684824168682,
+                0.017238426953554153,
+                0.017290953546762466
+              ]
+            },
+            "SOSMC-ULA_Adam": {
+              "ci95": [
+                0.018012807182905963,
+                0.018107279352905462
+              ],
+              "mean": 0.018060043267905713,
+              "n": 10,
+              "sd": 6.60360814980187e-05,
+              "values": [
+                0.01795116439461708,
+                0.018137047067284584,
+                0.01804804615676403,
+                0.018079709261655807,
+                0.018113713711500168,
+                0.018007636070251465,
+                0.018161598592996597,
+                0.01802182011306286,
+                0.018003005534410477,
+                0.018076691776514053
+              ]
+            },
+            "SOUL_Adam": {
+              "ci95": [
+                0.012211065772567803,
+                0.0197621808986916
+              ],
+              "mean": 0.015986623335629703,
+              "n": 10,
+              "sd": 0.005278232244186743,
+              "values": [
+                0.0023374203592538834,
+                0.01870768330991268,
+                0.019031167030334473,
+                0.018803302198648453,
+                0.014026946388185024,
+                0.012826630845665932,
+                0.01836610957980156,
+                0.01859220303595066,
+                0.018475642427802086,
+                0.018699128180742264
+              ]
+            },
+            "paired_sosmc_minus_impdiff": {
+              "ci95": [
+                0.0006405812847729177,
+                0.0008070426833514719
+              ],
+              "mean": 0.0007238119840621948,
+              "sd": 0.00011635657869260533
+            }
+          },
+          "dual_smooth": {
+            "ImpDiff_Adam": {
+              "ci95": [
+                0.5756407161080236,
+                0.579532812086404
+              ],
+              "mean": 0.5775867640972138,
+              "n": 10,
+              "sd": 0.002720576517166992,
+              "values": [
+                0.5799434185028076,
+                0.5730518102645874,
+                0.5776556730270386,
+                0.5777986645698547,
+                0.5800407528877258,
+                0.578156590461731,
+                0.5742771625518799,
+                0.5767724514007568,
+                0.5760865211486816,
+                0.582084596157074
+              ]
+            },
+            "SOSMC-ULA_Adam": {
+              "ci95": [
+                0.6020159070502408,
+                0.6037982280243747
+              ],
+              "mean": 0.6029070675373077,
+              "n": 10,
+              "sd": 0.001245843014976432,
+              "values": [
+                0.6033154726028442,
+                0.602600634098053,
+                0.6021915674209595,
+                0.6009846329689026,
+                0.6046769618988037,
+                0.6046202182769775,
+                0.6036643981933594,
+                0.603452742099762,
+                0.6016584038734436,
+                0.6019056439399719
+              ]
+            },
+            "SOUL_Adam": {
+              "ci95": [
+                0.020930697129152853,
+                0.5057451581810153
+              ],
+              "mean": 0.26333792765508407,
+              "n": 10,
+              "sd": 0.3388854861871966,
+              "values": [
+                0.6589565277099609,
+                0.0008091318886727095,
+                0.0009540479513816535,
+                0.0009186919196508825,
+                0.0008322264184243977,
+                0.655379593372345,
+                0.000798947352450341,
+                0.0007541797240264714,
+                0.6523945927619934,
+                0.6615813374519348
+              ]
+            },
+            "paired_sosmc_minus_impdiff": {
+              "ci95": [
+                0.02322374237701438,
+                0.02741686450317361
+              ],
+              "mean": 0.025320303440093995,
+              "sd": 0.0029309939049317114
+            }
+          },
+          "sparse_hard": {
+            "ImpDiff_Adam": {
+              "ci95": [
+                0.03571371643056551,
+                0.03602128119955381
+              ],
+              "mean": 0.03586749881505966,
+              "n": 10,
+              "sd": 0.00021498788638959717,
+              "values": [
+                0.03601106256246567,
+                0.03623248264193535,
+                0.03596087545156479,
+                0.03603069484233856,
+                0.03566092625260353,
+                0.03568646311759949,
+                0.03567778691649437,
+                0.035905539989471436,
+                0.035964835435152054,
+                0.035544320940971375
+              ]
+            },
+            "SOSMC-ULA_Adam": {
+              "ci95": [
+                0.03602824128405017,
+                0.036355997704110916
+              ],
+              "mean": 0.03619211949408054,
+              "n": 10,
+              "sd": 0.00022910185789895123,
+              "values": [
+                0.0362347736954689,
+                0.03651126101613045,
+                0.03630538284778595,
+                0.036166541278362274,
+                0.036276042461395264,
+                0.03601197898387909,
+                0.03615649789571762,
+                0.03573663532733917,
+                0.036481842398643494,
+                0.03604023903608322
+              ]
+            },
+            "SOUL_Adam": {
+              "ci95": [
+                0.03414130642225426,
+                0.038396332197287865
+              ],
+              "mean": 0.036268819309771064,
+              "n": 10,
+              "sd": 0.0029742645782116304,
+              "values": [
+                0.037493396550416946,
+                0.03840501978993416,
+                0.034520868211984634,
+                0.03906301036477089,
+                0.03864496946334839,
+                0.03577985242009163,
+                0.03742821514606476,
+                0.034815020859241486,
+                0.03747301176190376,
+                0.029064828529953957
+              ]
+            },
+            "paired_sosmc_minus_impdiff": {
+              "ci95": [
+                0.00016178979658532065,
+                0.0004874515614564426
+              ],
+              "mean": 0.00032462067902088164,
+              "sd": 0.00022763769315273136
+            }
+          },
+          "tight_tight": {
+            "ImpDiff_Adam": {
+              "ci95": [
+                0.012361978242677173,
+                0.012931194839495699
+              ],
+              "mean": 0.012646586541086436,
+              "n": 10,
+              "sd": 0.00039788261006107263,
+              "values": [
+                0.012434778735041618,
+                0.01281264889985323,
+                0.012665588408708572,
+                0.012603066861629486,
+                0.012671105563640594,
+                0.01221346203237772,
+                0.013387136161327362,
+                0.01289092656224966,
+                0.012854964472353458,
+                0.011932187713682652
+              ]
+            },
+            "SOSMC-ULA_Adam": {
+              "ci95": [
+                0.2156710799427929,
+                0.3474156890420017
+              ],
+              "mean": 0.2815433844923973,
+              "n": 10,
+              "sd": 0.09208953010655256,
+              "values": [
+                0.3284505605697632,
+                0.33005303144454956,
+                0.32359248399734497,
+                0.3252600431442261,
+                0.32201847434043884,
+                0.32324981689453125,
+                0.10530470311641693,
+                0.32494688034057617,
+                0.3241007626056671,
+                0.10845708847045898
+              ]
+            },
+            "SOUL_Adam": {
+              "ci95": [
+                0.0,
+                0.0
+              ],
+              "mean": 0.0,
+              "n": 10,
+              "sd": 0.0,
+              "values": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "paired_sosmc_minus_impdiff": {
+              "ci95": [
+                0.20301745564450152,
+                0.33477614025812025
+              ],
+              "mean": 0.2688967979513109,
+              "sd": 0.09209936889629039
+            }
+          }
+        },
+        "verdict": "VERIFIED"
+      },
+      "official_notebook_sha256": "cf0467361311b1b03786a4eef8d10e64890d2a02afc6f4d649fec42f05b25b89",
+      "paper_table_2_targets": [
+        {
+          "beta_kl": 0.1,
+          "dist_key": "dual_gaussian_sig1",
+          "name": "dual_smooth",
+          "paper_impdiff_mean": 0.6026,
+          "paper_sosmc_mean": 0.6484,
+          "paper_soul_mean": 0.6477,
+          "reward_key": "smooth_right"
+        },
+        {
+          "beta_kl": 0.001,
+          "dist_key": "dual_gaussian_sig1",
+          "name": "dual_hard",
+          "paper_impdiff_mean": 0.0169,
+          "paper_sosmc_mean": 0.0186,
+          "paper_soul_mean": 0.0187,
+          "reward_key": "hard_right"
+        },
+        {
+          "beta_kl": 0.001,
+          "dist_key": "hex_sparse_sig2",
+          "name": "sparse_hard",
+          "paper_impdiff_mean": 0.0363,
+          "paper_sosmc_mean": 0.0369,
+          "paper_soul_mean": 0.0365,
+          "reward_key": "hard_right"
+        },
+        {
+          "beta_kl": 0.1,
+          "dist_key": "hex_tight_sig002",
+          "name": "tight_tight",
+          "paper_impdiff_mean": 0.0142,
+          "paper_sosmc_mean": 0.2497,
+          "paper_soul_mean": 0.0,
+          "reward_key": "hard_right_tight"
+        }
+      ],
+      "passed": true,
+      "raw_rows": [
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9998487879998947,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_smooth",
+          "seed": 0,
+          "steps_completed": 948,
+          "terminal_reward": 0.5799434185028076
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.999934648999897,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_smooth",
+          "seed": 1,
+          "steps_completed": 985,
+          "terminal_reward": 0.5730518102645874
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.000673183999993,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_smooth",
+          "seed": 2,
+          "steps_completed": 973,
+          "terminal_reward": 0.5776556730270386
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0007465049999382,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_smooth",
+          "seed": 3,
+          "steps_completed": 914,
+          "terminal_reward": 0.5777986645698547
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0000946339999928,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_smooth",
+          "seed": 4,
+          "steps_completed": 959,
+          "terminal_reward": 0.5800407528877258
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.000595503999989,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_smooth",
+          "seed": 5,
+          "steps_completed": 985,
+          "terminal_reward": 0.578156590461731
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.000387868999951,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_smooth",
+          "seed": 6,
+          "steps_completed": 1005,
+          "terminal_reward": 0.5742771625518799
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9993898829999353,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_smooth",
+          "seed": 7,
+          "steps_completed": 975,
+          "terminal_reward": 0.5767724514007568
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9999369739999793,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_smooth",
+          "seed": 8,
+          "steps_completed": 988,
+          "terminal_reward": 0.5760865211486816
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0008240290000003,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_smooth",
+          "seed": 9,
+          "steps_completed": 986,
+          "terminal_reward": 0.582084596157074
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.000241220000021,
+          "method": "SOUL_Adam",
+          "problem": "dual_smooth",
+          "seed": 0,
+          "steps_completed": 665,
+          "terminal_reward": 0.6589565277099609
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9985937320000176,
+          "method": "SOUL_Adam",
+          "problem": "dual_smooth",
+          "seed": 1,
+          "steps_completed": 650,
+          "terminal_reward": 0.0008091318886727095
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.999740404000022,
+          "method": "SOUL_Adam",
+          "problem": "dual_smooth",
+          "seed": 2,
+          "steps_completed": 671,
+          "terminal_reward": 0.0009540479513816535
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9999529970000367,
+          "method": "SOUL_Adam",
+          "problem": "dual_smooth",
+          "seed": 3,
+          "steps_completed": 641,
+          "terminal_reward": 0.0009186919196508825
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9999923139999964,
+          "method": "SOUL_Adam",
+          "problem": "dual_smooth",
+          "seed": 4,
+          "steps_completed": 662,
+          "terminal_reward": 0.0008322264184243977
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9998507910000853,
+          "method": "SOUL_Adam",
+          "problem": "dual_smooth",
+          "seed": 5,
+          "steps_completed": 630,
+          "terminal_reward": 0.655379593372345
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0000634379999838,
+          "method": "SOUL_Adam",
+          "problem": "dual_smooth",
+          "seed": 6,
+          "steps_completed": 613,
+          "terminal_reward": 0.000798947352450341
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.999118287999977,
+          "method": "SOUL_Adam",
+          "problem": "dual_smooth",
+          "seed": 7,
+          "steps_completed": 671,
+          "terminal_reward": 0.0007541797240264714
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9979996639999626,
+          "method": "SOUL_Adam",
+          "problem": "dual_smooth",
+          "seed": 8,
+          "steps_completed": 671,
+          "terminal_reward": 0.6523945927619934
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0009072869999045,
+          "method": "SOUL_Adam",
+          "problem": "dual_smooth",
+          "seed": 9,
+          "steps_completed": 675,
+          "terminal_reward": 0.6615813374519348
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0005788820000134,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_smooth",
+          "seed": 0,
+          "steps_completed": 936,
+          "terminal_reward": 0.6033154726028442
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.999907908999944,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_smooth",
+          "seed": 1,
+          "steps_completed": 887,
+          "terminal_reward": 0.602600634098053
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9991720439999199,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_smooth",
+          "seed": 2,
+          "steps_completed": 887,
+          "terminal_reward": 0.6021915674209595
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0005473769999753,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_smooth",
+          "seed": 3,
+          "steps_completed": 897,
+          "terminal_reward": 0.6009846329689026
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.999761731000035,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_smooth",
+          "seed": 4,
+          "steps_completed": 901,
+          "terminal_reward": 0.6046769618988037
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9992735429999584,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_smooth",
+          "seed": 5,
+          "steps_completed": 888,
+          "terminal_reward": 0.6046202182769775
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.998758931999987,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_smooth",
+          "seed": 6,
+          "steps_completed": 936,
+          "terminal_reward": 0.6036643981933594
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.000580336999974,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_smooth",
+          "seed": 7,
+          "steps_completed": 961,
+          "terminal_reward": 0.603452742099762
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.000068087000045,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_smooth",
+          "seed": 8,
+          "steps_completed": 923,
+          "terminal_reward": 0.6016584038734436
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9994813269998986,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_smooth",
+          "seed": 9,
+          "steps_completed": 907,
+          "terminal_reward": 0.6019056439399719
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000249329999974,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_hard",
+          "seed": 0,
+          "steps_completed": 1033,
+          "terminal_reward": 0.017277248203754425
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.99961253999993,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_hard",
+          "seed": 1,
+          "steps_completed": 1084,
+          "terminal_reward": 0.017198096960783005
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000680969999962,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_hard",
+          "seed": 2,
+          "steps_completed": 1029,
+          "terminal_reward": 0.0173439159989357
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.0008697439999423,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_hard",
+          "seed": 3,
+          "steps_completed": 1027,
+          "terminal_reward": 0.017396962270140648
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.0003280139999333,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_hard",
+          "seed": 4,
+          "steps_completed": 1017,
+          "terminal_reward": 0.017372647300362587
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9999498959999755,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_hard",
+          "seed": 5,
+          "steps_completed": 1042,
+          "terminal_reward": 0.01736171916127205
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.0003732180000497,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_hard",
+          "seed": 6,
+          "steps_completed": 997,
+          "terminal_reward": 0.01735549420118332
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.0006160590000945,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_hard",
+          "seed": 7,
+          "steps_completed": 980,
+          "terminal_reward": 0.01752684824168682
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000591128999986,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_hard",
+          "seed": 8,
+          "steps_completed": 1002,
+          "terminal_reward": 0.017238426953554153
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.8868260090000604,
+          "method": "ImpDiff_Adam",
+          "problem": "dual_hard",
+          "seed": 9,
+          "steps_completed": 954,
+          "terminal_reward": 0.017290953546762466
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000849531999961,
+          "method": "SOUL_Adam",
+          "problem": "dual_hard",
+          "seed": 0,
+          "steps_completed": 661,
+          "terminal_reward": 0.0023374203592538834
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9986102590000883,
+          "method": "SOUL_Adam",
+          "problem": "dual_hard",
+          "seed": 1,
+          "steps_completed": 672,
+          "terminal_reward": 0.01870768330991268
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9980979989999241,
+          "method": "SOUL_Adam",
+          "problem": "dual_hard",
+          "seed": 2,
+          "steps_completed": 656,
+          "terminal_reward": 0.019031167030334473
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000623797000003,
+          "method": "SOUL_Adam",
+          "problem": "dual_hard",
+          "seed": 3,
+          "steps_completed": 661,
+          "terminal_reward": 0.018803302198648453
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.00030412000001,
+          "method": "SOUL_Adam",
+          "problem": "dual_hard",
+          "seed": 4,
+          "steps_completed": 669,
+          "terminal_reward": 0.014026946388185024
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9986616789999516,
+          "method": "SOUL_Adam",
+          "problem": "dual_hard",
+          "seed": 5,
+          "steps_completed": 641,
+          "terminal_reward": 0.012826630845665932
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9999499519999517,
+          "method": "SOUL_Adam",
+          "problem": "dual_hard",
+          "seed": 6,
+          "steps_completed": 652,
+          "terminal_reward": 0.01836610957980156
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.00056052299999,
+          "method": "SOUL_Adam",
+          "problem": "dual_hard",
+          "seed": 7,
+          "steps_completed": 627,
+          "terminal_reward": 0.01859220303595066
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9985129839999445,
+          "method": "SOUL_Adam",
+          "problem": "dual_hard",
+          "seed": 8,
+          "steps_completed": 654,
+          "terminal_reward": 0.018475642427802086
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9991023359999645,
+          "method": "SOUL_Adam",
+          "problem": "dual_hard",
+          "seed": 9,
+          "steps_completed": 656,
+          "terminal_reward": 0.018699128180742264
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.0002407409999705,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_hard",
+          "seed": 0,
+          "steps_completed": 883,
+          "terminal_reward": 0.01795116439461708
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9995992890000025,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_hard",
+          "seed": 1,
+          "steps_completed": 906,
+          "terminal_reward": 0.018137047067284584
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9994315249999772,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_hard",
+          "seed": 2,
+          "steps_completed": 923,
+          "terminal_reward": 0.01804804615676403
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.998371405999933,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_hard",
+          "seed": 3,
+          "steps_completed": 931,
+          "terminal_reward": 0.018079709261655807
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9980716400000347,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_hard",
+          "seed": 4,
+          "steps_completed": 886,
+          "terminal_reward": 0.018113713711500168
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000673835999919,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_hard",
+          "seed": 5,
+          "steps_completed": 881,
+          "terminal_reward": 0.018007636070251465
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.998959345000003,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_hard",
+          "seed": 6,
+          "steps_completed": 909,
+          "terminal_reward": 0.018161598592996597
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9995650150000301,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_hard",
+          "seed": 7,
+          "steps_completed": 949,
+          "terminal_reward": 0.01802182011306286
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.0008669160000636,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_hard",
+          "seed": 8,
+          "steps_completed": 954,
+          "terminal_reward": 0.018003005534410477
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.999188148999906,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "dual_hard",
+          "seed": 9,
+          "steps_completed": 897,
+          "terminal_reward": 0.018076691776514053
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9984650559999864,
+          "method": "ImpDiff_Adam",
+          "problem": "sparse_hard",
+          "seed": 0,
+          "steps_completed": 757,
+          "terminal_reward": 0.03601106256246567
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000304217000007,
+          "method": "ImpDiff_Adam",
+          "problem": "sparse_hard",
+          "seed": 1,
+          "steps_completed": 787,
+          "terminal_reward": 0.03623248264193535
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9998039680000375,
+          "method": "ImpDiff_Adam",
+          "problem": "sparse_hard",
+          "seed": 2,
+          "steps_completed": 749,
+          "terminal_reward": 0.03596087545156479
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9981841719999238,
+          "method": "ImpDiff_Adam",
+          "problem": "sparse_hard",
+          "seed": 3,
+          "steps_completed": 817,
+          "terminal_reward": 0.03603069484233856
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000445367999987,
+          "method": "ImpDiff_Adam",
+          "problem": "sparse_hard",
+          "seed": 4,
+          "steps_completed": 802,
+          "terminal_reward": 0.03566092625260353
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9995816320000586,
+          "method": "ImpDiff_Adam",
+          "problem": "sparse_hard",
+          "seed": 5,
+          "steps_completed": 814,
+          "terminal_reward": 0.03568646311759949
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9996329130000277,
+          "method": "ImpDiff_Adam",
+          "problem": "sparse_hard",
+          "seed": 6,
+          "steps_completed": 811,
+          "terminal_reward": 0.03567778691649437
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000100694000025,
+          "method": "ImpDiff_Adam",
+          "problem": "sparse_hard",
+          "seed": 7,
+          "steps_completed": 842,
+          "terminal_reward": 0.035905539989471436
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9993166819999715,
+          "method": "ImpDiff_Adam",
+          "problem": "sparse_hard",
+          "seed": 8,
+          "steps_completed": 780,
+          "terminal_reward": 0.035964835435152054
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9992436349999707,
+          "method": "ImpDiff_Adam",
+          "problem": "sparse_hard",
+          "seed": 9,
+          "steps_completed": 792,
+          "terminal_reward": 0.035544320940971375
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9984790800000383,
+          "method": "SOUL_Adam",
+          "problem": "sparse_hard",
+          "seed": 0,
+          "steps_completed": 511,
+          "terminal_reward": 0.037493396550416946
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9989024689999724,
+          "method": "SOUL_Adam",
+          "problem": "sparse_hard",
+          "seed": 1,
+          "steps_completed": 516,
+          "terminal_reward": 0.03840501978993416
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000294103999977,
+          "method": "SOUL_Adam",
+          "problem": "sparse_hard",
+          "seed": 2,
+          "steps_completed": 556,
+          "terminal_reward": 0.034520868211984634
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.00000431400008,
+          "method": "SOUL_Adam",
+          "problem": "sparse_hard",
+          "seed": 3,
+          "steps_completed": 538,
+          "terminal_reward": 0.03906301036477089
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9976027039999735,
+          "method": "SOUL_Adam",
+          "problem": "sparse_hard",
+          "seed": 4,
+          "steps_completed": 542,
+          "terminal_reward": 0.03864496946334839
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9976749949998975,
+          "method": "SOUL_Adam",
+          "problem": "sparse_hard",
+          "seed": 5,
+          "steps_completed": 547,
+          "terminal_reward": 0.03577985242009163
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9973050989999592,
+          "method": "SOUL_Adam",
+          "problem": "sparse_hard",
+          "seed": 6,
+          "steps_completed": 570,
+          "terminal_reward": 0.03742821514606476
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9995584920000056,
+          "method": "SOUL_Adam",
+          "problem": "sparse_hard",
+          "seed": 7,
+          "steps_completed": 540,
+          "terminal_reward": 0.034815020859241486
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9974969009999768,
+          "method": "SOUL_Adam",
+          "problem": "sparse_hard",
+          "seed": 8,
+          "steps_completed": 534,
+          "terminal_reward": 0.03747301176190376
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9998939449999398,
+          "method": "SOUL_Adam",
+          "problem": "sparse_hard",
+          "seed": 9,
+          "steps_completed": 538,
+          "terminal_reward": 0.029064828529953957
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.999431966999964,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "sparse_hard",
+          "seed": 0,
+          "steps_completed": 695,
+          "terminal_reward": 0.0362347736954689
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.999501777999967,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "sparse_hard",
+          "seed": 1,
+          "steps_completed": 712,
+          "terminal_reward": 0.03651126101613045
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000147308999999,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "sparse_hard",
+          "seed": 2,
+          "steps_completed": 748,
+          "terminal_reward": 0.03630538284778595
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.000421678999942,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "sparse_hard",
+          "seed": 3,
+          "steps_completed": 705,
+          "terminal_reward": 0.036166541278362274
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9984724009999582,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "sparse_hard",
+          "seed": 4,
+          "steps_completed": 713,
+          "terminal_reward": 0.036276042461395264
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.9985240639999802,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "sparse_hard",
+          "seed": 5,
+          "steps_completed": 697,
+          "terminal_reward": 0.03601197898387909
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.998636976000057,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "sparse_hard",
+          "seed": 6,
+          "steps_completed": 725,
+          "terminal_reward": 0.03615649789571762
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.0008445109999684,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "sparse_hard",
+          "seed": 7,
+          "steps_completed": 747,
+          "terminal_reward": 0.03573663532733917
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 2.00048623400005,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "sparse_hard",
+          "seed": 8,
+          "steps_completed": 729,
+          "terminal_reward": 0.036481842398643494
+        },
+        {
+          "beta_kl": 0.001,
+          "last_recorded_time_seconds": 1.999970074000089,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "sparse_hard",
+          "seed": 9,
+          "steps_completed": 704,
+          "terminal_reward": 0.03604023903608322
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.000000084000021,
+          "method": "ImpDiff_Adam",
+          "problem": "tight_tight",
+          "seed": 0,
+          "steps_completed": 838,
+          "terminal_reward": 0.012434778735041618
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9989250679999486,
+          "method": "ImpDiff_Adam",
+          "problem": "tight_tight",
+          "seed": 1,
+          "steps_completed": 784,
+          "terminal_reward": 0.01281264889985323
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.000148788000047,
+          "method": "ImpDiff_Adam",
+          "problem": "tight_tight",
+          "seed": 2,
+          "steps_completed": 758,
+          "terminal_reward": 0.012665588408708572
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9993870300000935,
+          "method": "ImpDiff_Adam",
+          "problem": "tight_tight",
+          "seed": 3,
+          "steps_completed": 773,
+          "terminal_reward": 0.012603066861629486
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.999547520999954,
+          "method": "ImpDiff_Adam",
+          "problem": "tight_tight",
+          "seed": 4,
+          "steps_completed": 779,
+          "terminal_reward": 0.012671105563640594
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0006414509999786,
+          "method": "ImpDiff_Adam",
+          "problem": "tight_tight",
+          "seed": 5,
+          "steps_completed": 777,
+          "terminal_reward": 0.01221346203237772
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.000599953999995,
+          "method": "ImpDiff_Adam",
+          "problem": "tight_tight",
+          "seed": 6,
+          "steps_completed": 787,
+          "terminal_reward": 0.013387136161327362
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9999739959999943,
+          "method": "ImpDiff_Adam",
+          "problem": "tight_tight",
+          "seed": 7,
+          "steps_completed": 735,
+          "terminal_reward": 0.01289092656224966
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.00013206899996,
+          "method": "ImpDiff_Adam",
+          "problem": "tight_tight",
+          "seed": 8,
+          "steps_completed": 792,
+          "terminal_reward": 0.012854964472353458
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0004349639999646,
+          "method": "ImpDiff_Adam",
+          "problem": "tight_tight",
+          "seed": 9,
+          "steps_completed": 782,
+          "terminal_reward": 0.011932187713682652
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9961539340000627,
+          "method": "SOUL_Adam",
+          "problem": "tight_tight",
+          "seed": 0,
+          "steps_completed": 523,
+          "terminal_reward": 0.0
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9990758669999877,
+          "method": "SOUL_Adam",
+          "problem": "tight_tight",
+          "seed": 1,
+          "steps_completed": 499,
+          "terminal_reward": 0.0
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.000170156999957,
+          "method": "SOUL_Adam",
+          "problem": "tight_tight",
+          "seed": 2,
+          "steps_completed": 522,
+          "terminal_reward": 0.0
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9993192109999427,
+          "method": "SOUL_Adam",
+          "problem": "tight_tight",
+          "seed": 3,
+          "steps_completed": 474,
+          "terminal_reward": 0.0
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9983600430000479,
+          "method": "SOUL_Adam",
+          "problem": "tight_tight",
+          "seed": 4,
+          "steps_completed": 502,
+          "terminal_reward": 0.0
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.999005845000056,
+          "method": "SOUL_Adam",
+          "problem": "tight_tight",
+          "seed": 5,
+          "steps_completed": 515,
+          "terminal_reward": 0.0
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0002925300000243,
+          "method": "SOUL_Adam",
+          "problem": "tight_tight",
+          "seed": 6,
+          "steps_completed": 524,
+          "terminal_reward": 0.0
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0008403489999864,
+          "method": "SOUL_Adam",
+          "problem": "tight_tight",
+          "seed": 7,
+          "steps_completed": 515,
+          "terminal_reward": 0.0
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9977562579999812,
+          "method": "SOUL_Adam",
+          "problem": "tight_tight",
+          "seed": 8,
+          "steps_completed": 512,
+          "terminal_reward": 0.0
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0009032169999728,
+          "method": "SOUL_Adam",
+          "problem": "tight_tight",
+          "seed": 9,
+          "steps_completed": 507,
+          "terminal_reward": 0.0
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0004205499999443,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "tight_tight",
+          "seed": 0,
+          "steps_completed": 643,
+          "terminal_reward": 0.3284505605697632
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.999648857000011,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "tight_tight",
+          "seed": 1,
+          "steps_completed": 622,
+          "terminal_reward": 0.33005303144454956
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.000132076,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "tight_tight",
+          "seed": 2,
+          "steps_completed": 645,
+          "terminal_reward": 0.32359248399734497
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.999437041999954,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "tight_tight",
+          "seed": 3,
+          "steps_completed": 672,
+          "terminal_reward": 0.3252600431442261
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.999201898000024,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "tight_tight",
+          "seed": 4,
+          "steps_completed": 657,
+          "terminal_reward": 0.32201847434043884
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.998730043000137,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "tight_tight",
+          "seed": 5,
+          "steps_completed": 714,
+          "terminal_reward": 0.32324981689453125
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0000780889999987,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "tight_tight",
+          "seed": 6,
+          "steps_completed": 608,
+          "terminal_reward": 0.10530470311641693
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9995498289999887,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "tight_tight",
+          "seed": 7,
+          "steps_completed": 686,
+          "terminal_reward": 0.32494688034057617
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 1.9989635189999717,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "tight_tight",
+          "seed": 8,
+          "steps_completed": 690,
+          "terminal_reward": 0.3241007626056671
+        },
+        {
+          "beta_kl": 0.1,
+          "last_recorded_time_seconds": 2.0006142030001683,
+          "method": "SOSMC-ULA_Adam",
+          "problem": "tight_tight",
+          "seed": 9,
+          "steps_completed": 643,
+          "terminal_reward": 0.10845708847045898
+        }
+      ],
+      "runtime_seconds": 427.7652910129999,
+      "upstream_commit": "62e4f8f07ae2705073388f5d2c4babf5c87b00be",
+      "verdict": "VERIFIED"
+    }
+  },
+  "summary": {
+    "all_accepted_passed": true,
+    "provenance": {
+      "cpu_allocation": {
+        "affinity_count": 64,
+        "cgroup_quota_cores": 8.0,
+        "os_cpu_count": 64
+      },
+      "cuda_visible": false,
+      "device_policy": "CPU only",
+      "git_sha": "4620a1d7930878312d2620f15677921c9a08766c",
+      "platform": "Linux-6.12.94-123.190.amzn2023.x86_64-x86_64-with-glibc2.41",
+      "python": "3.12.13",
+      "runtime_seconds": 429.178197576,
+      "seed": 20260726
+    },
+    "results": {
+      "2": "VERIFIED",
+      "3": "VERIFIED",
+      "4": "VERIFIED"
+    },
+    "stage": "claim_4_wallclock"
+  }
+}

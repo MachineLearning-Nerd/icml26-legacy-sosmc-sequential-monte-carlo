@@ -1,0 +1,40 @@
+{
+  "claim": "Paper Equation 19 for equal-covariance Gaussian targets",
+  "independent_monte_carlo": [
+    {
+      "dimension": 1,
+      "empirical_chi2_plus_one": 1.2191648113378668,
+      "exact_chi2_plus_one": 1.2244600851219147,
+      "relative_error": 0.00432457852108809
+    },
+    {
+      "dimension": 2,
+      "empirical_chi2_plus_one": 1.2276771537902815,
+      "exact_chi2_plus_one": 1.224460085121915,
+      "relative_error": 0.0026273364950448854
+    },
+    {
+      "dimension": 5,
+      "empirical_chi2_plus_one": 1.2268291088354266,
+      "exact_chi2_plus_one": 1.224460085121915,
+      "relative_error": 0.0019347496437793555
+    },
+    {
+      "dimension": 11,
+      "empirical_chi2_plus_one": 1.2275560347276029,
+      "exact_chi2_plus_one": 1.2244600851219147,
+      "relative_error": 0.0025284201937704662
+    }
+  ],
+  "max_relative_error": 0.00432457852108809,
+  "negative_controls": {
+    "actual_chi2": 0.0206207261596576,
+    "equation_19_wrongly_extended_chi2": 0.0,
+    "unequal_covariance_invalidates_equal_covariance_formula": true,
+    "variance_p": 1.2,
+    "variance_q": 1.0
+  },
+  "passed": true,
+  "symbolic_univariate_whitened_identity": "0",
+  "verdict": "VERIFIED"
+}

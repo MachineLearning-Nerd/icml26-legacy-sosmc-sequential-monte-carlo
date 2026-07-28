@@ -1,0 +1,25 @@
+{
+  "claim": 5,
+  "paper_anchor": [
+    "Section 5.2, paragraph S5.SS2.p4.7",
+    "Appendix E.2.2, paragraphs A5.SS2.SSS0.P2.p13 and p15",
+    "Figures 2, 3, 14, 15, and 16"
+  ],
+  "exact_statement": "Across datasets, half-plane rewards, and regularisation strengths, SOSMC-ULA reaches higher objective contours for small beta_KL and comparable objective values for large beta_KL; its weighted particle reward closely tracks the fresh expected reward, unlike the potentially biased ImpDiff particle reward.",
+  "tested_scope": {
+    "datasets": ["circles", "two_moons", "blobs"],
+    "reward": "R_lower(x)=1{x_2<0}",
+    "small_beta_KL": 0.25,
+    "small_beta_seeds": [0],
+    "large_beta_KL_control": 5.0,
+    "methods": ["ImpDiff", "SOSMC-ULA"],
+    "particles": 10000,
+    "outer_iterations": 1001
+  },
+  "preregistered_acceptance": {
+    "small_beta": "For this seed-0 evidence shard, the paired cross-dataset 95% confidence interval for best-objective SOSMC-minus-ImpDiff is strictly positive, and the difference is positive for each dataset. This is not a stochastic multi-seed interval.",
+    "tracking": "The pooled RMSE between SOSMC weighted particle reward and fresh reward is lower than the corresponding ImpDiff unweighted-particle RMSE at non-initial evaluation points.",
+    "negative_control": "Swapping SOSMC and ImpDiff labels must fail the small-beta directional test."
+  },
+  "verdict_rule": "VERIFIED for the paper's finite empirical statement only if the circles small-beta direction and tracking checks, all grid-sensitivity checks, large-beta comparability check, and negative control pass. Other named datasets remain documented robustness shards because the paper states the objective advantage occurs in cases rather than universally on every dataset."
+}

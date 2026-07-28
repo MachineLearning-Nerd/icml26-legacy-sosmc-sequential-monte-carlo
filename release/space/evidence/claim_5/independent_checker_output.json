@@ -1,0 +1,81 @@
+{
+  "checks": {
+    "large_beta_best_objectives_within_0p05": true,
+    "small_beta_positive_across_grid_variants": true,
+    "small_beta_positive_advantage_each_dataset": {
+      "circles": true
+    },
+    "small_beta_positive_observed_advantage": true,
+    "sosmc_weighted_tracking_rmse_below_impdiff_unweighted": true
+  },
+  "grid_sensitivity": {
+    "positive_direction": {
+      "resolution_400_limit_6": true,
+      "resolution_400_limit_8": true,
+      "resolution_600_limit_6": true
+    },
+    "sosmc_minus_impdiff_best_objective": {
+      "resolution_400_limit_6": 0.004927433324265151,
+      "resolution_400_limit_8": 0.004928338331185889,
+      "resolution_600_limit_6": 0.004926800384019048
+    },
+    "variants": [
+      "resolution_400_limit_6",
+      "resolution_400_limit_8",
+      "resolution_600_limit_6"
+    ]
+  },
+  "large_beta_control": {
+    "absolute_comparability_threshold": 0.05,
+    "best_objectives": {
+      "ImpDiff": 0.5776397245531458,
+      "SOSMC-ULA": 0.5776716703130144
+    },
+    "run": true,
+    "sosmc_minus_impdiff": 3.194575986853465e-05
+  },
+  "negative_control": {
+    "failed_as_intended": true,
+    "reversed_label_direction_passed": false
+  },
+  "passed": true,
+  "per_dataset_positive_mean_advantage": {
+    "circles": true
+  },
+  "scope": {
+    "datasets": [
+      "circles"
+    ],
+    "large_beta": 5.0,
+    "large_beta_dataset": "circles",
+    "small_beta": 0.25,
+    "small_beta_seeds": [
+      0
+    ]
+  },
+  "small_beta_and_tracking_passed": true,
+  "small_beta_best_objective_paired_difference": {
+    "ci95": [
+      0.004927433324265151,
+      0.004927433324265151
+    ],
+    "mean": 0.004927433324265151,
+    "n": 1,
+    "sd": null,
+    "t_critical": null,
+    "values": [
+      0.004927433324265151
+    ]
+  },
+  "tracking": {
+    "ImpDiff": {
+      "n_evaluation_points": 2,
+      "rmse_particle_vs_fresh": 0.20029939144052797
+    },
+    "SOSMC-ULA": {
+      "n_evaluation_points": 2,
+      "rmse_particle_vs_fresh": 0.005658277628284479
+    }
+  },
+  "verdict": "VERIFIED"
+}

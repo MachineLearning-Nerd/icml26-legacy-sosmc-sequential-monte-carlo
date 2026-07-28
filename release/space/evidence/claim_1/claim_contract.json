@@ -1,0 +1,11 @@
+{
+  "claim_id": 1,
+  "paper_anchor": "Section 3.2, Algorithm 1 (#alg1)",
+  "exact_statement": "SOSMC carries a weighted particle population through successive parameter targets using reweighting, resampling, mutation, and a particle gradient estimate.",
+  "acceptance": [
+    "Execute the named Algorithm 1 path in an official EBM setting.",
+    "Trace particle identity and nonuniform weights across at least two outer iterations.",
+    "Independently recompute the gradient estimate and fail on disagreement."
+  ],
+  "baseline_verdict": "BLOCKED"
+}

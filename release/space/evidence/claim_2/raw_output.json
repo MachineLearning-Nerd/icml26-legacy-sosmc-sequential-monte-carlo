@@ -1,0 +1,39 @@
+{
+  "claim": "Paper Proposition 1 linear convergence under A1",
+  "exact_quadratic_grid": {
+    "L_values": 12,
+    "eigenvalues": "all integers mu..L",
+    "gamma_fractions_of_1_over_L": [
+      "1/4",
+      "1/2",
+      "1"
+    ],
+    "mu_per_L": "all integers 1..L",
+    "violations": []
+  },
+  "negative_controls": {
+    "bad_claimed_bound": "3/4",
+    "bad_contraction": "9/4",
+    "gamma_above_1_over_L_breaks_certificate": true,
+    "gamma_bad": "1/4",
+    "non_pl_gradient_ratio_tends_to_zero": true,
+    "non_pl_ratios": [
+      2.0,
+      0.020000000000000004,
+      0.00020000000000000004,
+      2e-06
+    ]
+  },
+  "passed": true,
+  "symbolic_certificate": {
+    "assumptions": [
+      "L-smooth loss",
+      "mu-PL: ||grad l||^2 >= 2 mu (l-inf l)",
+      "0 < gamma <= 1/L",
+      "idealized SOSMC update equals exact gradient descent by Lemma 1"
+    ],
+    "descent_to_half_step_identity": "0",
+    "pl_substitution_identity": "0"
+  },
+  "verdict": "VERIFIED"
+}

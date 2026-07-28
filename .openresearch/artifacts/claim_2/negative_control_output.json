@@ -1,0 +1,13 @@
+{
+  "bad_claimed_bound": "3/4",
+  "bad_contraction": "9/4",
+  "gamma_above_1_over_L_breaks_certificate": true,
+  "gamma_bad": "1/4",
+  "non_pl_gradient_ratio_tends_to_zero": true,
+  "non_pl_ratios": [
+    2.0,
+    0.020000000000000004,
+    0.00020000000000000004,
+    2e-06
+  ]
+}

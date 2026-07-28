@@ -1,0 +1,14 @@
+{
+  "claim_id": 4,
+  "paper_anchor": "Section 5.1, Figure 1, Appendix E.1, Table 2",
+  "statement_scope": "The four reported Gaussian-mixture Langevin/reward settings under Adam, each evaluated across 10 runs at the paper's beta and a synchronized two-second wall-clock budget.",
+  "methods": ["ImpDiff", "SOUL", "SOSMC-ULA"],
+  "acceptance": [
+    "Mean terminal SOSMC-ULA reward exceeds ImpDiff in all four Table 2 settings.",
+    "In Figure 1a's dual/smooth setting, SOSMC-ULA run-to-run standard deviation is below SOUL.",
+    "In Figure 1b's tight/tight setting, SOUL exhibits the reported mode-transition failure while SOSMC-ULA exceeds it by at least 0.05 reward.",
+    "The reversed-label checker must fail."
+  ],
+  "seeds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+  "wall_clock_seconds": 2.001
+}

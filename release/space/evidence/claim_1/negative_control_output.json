@@ -1,0 +1,14 @@
+[
+  {
+    "expected": "the Algorithm 1 continuity contract fails",
+    "failed_for_intended_reason": true,
+    "name": "replace the carried population with a fresh population",
+    "observed_passed": false
+  },
+  {
+    "expected": "the Algorithm 1 continuity contract fails",
+    "failed_for_intended_reason": true,
+    "name": "replace the carried population with a fresh population",
+    "observed_passed": false
+  }
+]

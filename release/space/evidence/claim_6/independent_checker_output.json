@@ -1,0 +1,2403 @@
+{
+  "direct_checks": {
+    "beta_order_audit": {
+      "bright": {
+        "acceptance_note": "Reported as a diagnostic; the paper's Claim 6 contract requires improvement in every finite cell, not strict monotonicity between noisy endpoints.",
+        "betas_high_to_low": [
+          5.0,
+          2.0,
+          1.0,
+          0.5
+        ],
+        "nondecreasing_as_regularization_weakens": true,
+        "post_reward_means": [
+          -0.6486487236494819,
+          -0.5672091802892586,
+          -0.4969161123347779,
+          -0.4310311634714405
+        ]
+      },
+      "dark": {
+        "acceptance_note": "Reported as a diagnostic; the paper's Claim 6 contract requires improvement in every finite cell, not strict monotonicity between noisy endpoints.",
+        "betas_high_to_low": [
+          5.0,
+          2.0,
+          1.0,
+          0.5
+        ],
+        "nondecreasing_as_regularization_weakens": true,
+        "post_reward_means": [
+          0.39595463902999956,
+          0.4394085952080786,
+          0.48283846645305556,
+          0.496517351983736
+        ]
+      },
+      "lower_half": {
+        "acceptance_note": "Reported as a diagnostic; the paper's Claim 6 contract requires improvement in every finite cell, not strict monotonicity between noisy endpoints.",
+        "betas_high_to_low": [
+          5.0,
+          2.0,
+          1.0,
+          0.5
+        ],
+        "nondecreasing_as_regularization_weakens": true,
+        "post_reward_means": [
+          0.17001159147669873,
+          0.2218753119620184,
+          0.25560742725307745,
+          0.2724083988772084
+        ]
+      }
+    },
+    "checks": {
+      "complete_three_reward_four_beta_grid": true,
+      "fresh_reward_increase_ci_all_cells": true,
+      "independent_recognizer_valid": true,
+      "one_class_pca_calibration_valid": true,
+      "pretraining_tuning_kernel_mismatch_exact": true,
+      "shared_initialization_guarded": true,
+      "unseen_pixel_shuffle_rejected": true
+    },
+    "counterexample_cells": [
+      "bright:beta=0.5",
+      "lower_half:beta=1",
+      "lower_half:beta=0.5"
+    ],
+    "falsification_checks": {
+      "bright:beta=0.5": true,
+      "bright:beta=1": false,
+      "bright:beta=2": false,
+      "bright:beta=5": false,
+      "dark:beta=0.5": false,
+      "dark:beta=1": false,
+      "dark:beta=2": false,
+      "dark:beta=5": false,
+      "lower_half:beta=0.5": true,
+      "lower_half:beta=1": true,
+      "lower_half:beta=2": false,
+      "lower_half:beta=5": false
+    },
+    "falsification_passed": true,
+    "fixed_thresholds": {
+      "classifier_test_accuracy_minimum": 0.97,
+      "digit_distance_multiplier": 1.5,
+      "morphology_retention_minimum": 0.5,
+      "pca_components": 64,
+      "pca_digit_manifold_score_threshold": "max(held-out-real q99, pretrained-baseline q95)",
+      "pca_falsification_rule": "the 95% order-statistic interval lower endpoint for the tuned median residual exceeds the fixed threshold",
+      "pca_seed": 2026072722,
+      "pca_training_images": 5000,
+      "threshold_calibration": "held-out real MNIST and pretrained EBM only; tuned samples and reward-maximizing controls are excluded"
+    },
+    "passed": true,
+    "reward_checks": {
+      "bright:beta=0.5": true,
+      "bright:beta=1": true,
+      "bright:beta=2": true,
+      "bright:beta=5": true,
+      "dark:beta=0.5": true,
+      "dark:beta=1": true,
+      "dark:beta=2": true,
+      "dark:beta=5": true,
+      "lower_half:beta=0.5": true,
+      "lower_half:beta=1": true,
+      "lower_half:beta=2": true,
+      "lower_half:beta=5": true
+    },
+    "structure_audit": {
+      "bright:beta=0.5": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": true,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 62.89788818359375,
+            "mean": 62.89788818359375,
+            "median": 62.89788818359375,
+            "minimum": 62.89788818359375,
+            "q01": 62.89788818359375,
+            "q05": 62.89788818359375,
+            "q95": 62.89788818359375,
+            "q99": 62.89788818359375,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 62.89788818359375,
+            "ci95_low": 62.89788818359375,
+            "count": 192,
+            "median": 62.89788818359375,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 9.090975761413574,
+            "mean": 5.6714983060956,
+            "median": 5.575846195220947,
+            "minimum": 3.689213514328003,
+            "q01": 3.879012882709503,
+            "q05": 4.050233149528504,
+            "q95": 7.838666725158691,
+            "q99": 8.942952890396118,
+            "std": 1.1808253116390626
+          },
+          "tuned_median_interval": {
+            "ci95_high": 5.82772159576416,
+            "ci95_low": 5.209206581115723,
+            "count": 192,
+            "median": 5.575846195220947,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": true,
+          "tuned_q95_within_digit_manifold": false,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.41616150736808777,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.9955036044120789,
+            "tuned_predicted_class_count": 8
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "minimum": 1.0,
+              "q01": 1.0,
+              "q05": 1.0,
+              "q95": 1.0,
+              "q99": 1.0,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 1.5936288833618164,
+              "mean": 1.5936288833618164,
+              "median": 1.5936288833618164,
+              "minimum": 1.5936288833618164,
+              "q01": 1.5936288833618164,
+              "q05": 1.5936288833618164,
+              "q95": 1.5936288833618164,
+              "q99": 1.5936288833618164,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.3443877696990967,
+              "mean": 0.2957323557542016,
+              "median": 0.29719388484954834,
+              "minimum": 0.23086734116077423,
+              "q01": 0.2530229577422142,
+              "q05": 0.26345662623643873,
+              "q95": 0.3265306055545807,
+              "q99": 0.3374234601855278,
+              "std": 0.020046412491194297
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.6031587719917297,
+              "mean": 0.3901684375014156,
+              "median": 0.38227441906929016,
+              "minimum": 0.23091065883636475,
+              "q01": 0.2515706442296505,
+              "q05": 0.2845276534557343,
+              "q95": 0.5019132405519485,
+              "q99": 0.5329027152061464,
+              "std": 0.06897599673805295
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.9333116412162781,
+              "mean": 0.8824642406155666,
+              "median": 0.8825483918190002,
+              "minimum": 0.7865262627601624,
+              "q01": 0.8316872400045395,
+              "q05": 0.8431193053722381,
+              "q95": 0.9169777423143387,
+              "q99": 0.9266158837080002,
+              "std": 0.023514328067927668
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.21199758350849152,
+              "mean": 0.1749626451637596,
+              "median": 0.1754678338766098,
+              "minimum": 0.12002366781234741,
+              "q01": 0.14014104455709459,
+              "q05": 0.14610255062580108,
+              "q95": 0.20056196004152296,
+              "q99": 0.20985366493463517,
+              "std": 0.016679077940951165
+            }
+          },
+          "tuned_digit_like": false
+        }
+      },
+      "bright:beta=1": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": true,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 62.89788818359375,
+            "mean": 62.89788818359375,
+            "median": 62.89788818359375,
+            "minimum": 62.89788818359375,
+            "q01": 62.89788818359375,
+            "q05": 62.89788818359375,
+            "q95": 62.89788818359375,
+            "q99": 62.89788818359375,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 62.89788818359375,
+            "ci95_low": 62.89788818359375,
+            "count": 192,
+            "median": 62.89788818359375,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 6.8817973136901855,
+            "mean": 4.066944486151139,
+            "median": 3.9207096099853516,
+            "minimum": 2.5846755504608154,
+            "q01": 2.6299621844291687,
+            "q05": 2.805246341228485,
+            "q95": 5.755612707138059,
+            "q99": 6.6552767658233645,
+            "std": 0.9210279962858725
+          },
+          "tuned_median_interval": {
+            "ci95_high": 4.0873541831970215,
+            "ci95_low": 3.7095744609832764,
+            "count": 192,
+            "median": 3.9207096099853516,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": false,
+          "tuned_q95_within_digit_manifold": false,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.37053272128105164,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.9977120161056519,
+            "tuned_predicted_class_count": 9
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "minimum": 1.0,
+              "q01": 1.0,
+              "q05": 1.0,
+              "q95": 1.0,
+              "q99": 1.0,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 1.5936288833618164,
+              "mean": 1.5936288833618164,
+              "median": 1.5936288833618164,
+              "minimum": 1.5936288833618164,
+              "q01": 1.5936288833618164,
+              "q05": 1.5936288833618164,
+              "q95": 1.5936288833618164,
+              "q99": 1.5936288833618164,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.31887754797935486,
+              "mean": 0.2646816532748441,
+              "median": 0.26658162474632263,
+              "minimum": 0.2091836780309677,
+              "q01": 0.21161990135908126,
+              "q05": 0.2251913234591484,
+              "q95": 0.3035714328289032,
+              "q99": 0.31389030545949936,
+              "std": 0.02408962404157087
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.4715783894062042,
+              "mean": 0.3268482005999734,
+              "median": 0.3209788501262665,
+              "minimum": 0.19178779423236847,
+              "q01": 0.20231617242097855,
+              "q05": 0.23454832285642624,
+              "q95": 0.43372066766023637,
+              "q99": 0.46464703381061556,
+              "std": 0.06205666648846577
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.9061768651008606,
+              "mean": 0.8428676808252931,
+              "median": 0.8442478775978088,
+              "minimum": 0.7481294274330139,
+              "q01": 0.7579407495260239,
+              "q05": 0.7869944542646408,
+              "q95": 0.8951786905527115,
+              "q99": 0.9031483507156373,
+              "std": 0.03342305386213067
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.2012653946876526,
+              "mean": 0.16086878910815963,
+              "median": 0.1620519757270813,
+              "minimum": 0.10635219514369965,
+              "q01": 0.11465191498398782,
+              "q05": 0.12835287898778916,
+              "q95": 0.18593335151672363,
+              "q99": 0.19716836392879486,
+              "std": 0.01741013935608
+            }
+          },
+          "tuned_digit_like": true
+        }
+      },
+      "bright:beta=2": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": true,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 62.89788818359375,
+            "mean": 62.89788818359375,
+            "median": 62.89788818359375,
+            "minimum": 62.89788818359375,
+            "q01": 62.89788818359375,
+            "q05": 62.89788818359375,
+            "q95": 62.89788818359375,
+            "q99": 62.89788818359375,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 62.89788818359375,
+            "ci95_low": 62.89788818359375,
+            "count": 192,
+            "median": 62.89788818359375,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 5.421877861022949,
+            "mean": 3.224391811216871,
+            "median": 3.190581798553467,
+            "minimum": 1.7628397941589355,
+            "q01": 2.1201660978794097,
+            "q05": 2.323464584350586,
+            "q95": 4.449076199531555,
+            "q99": 4.829958391189575,
+            "std": 0.6645553027650055
+          },
+          "tuned_median_interval": {
+            "ci95_high": 3.3119921684265137,
+            "ci95_low": 3.0001473426818848,
+            "count": 192,
+            "median": 3.190581798553467,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": false,
+          "tuned_q95_within_digit_manifold": false,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.3479691743850708,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.9981208443641663,
+            "tuned_predicted_class_count": 9
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "minimum": 1.0,
+              "q01": 1.0,
+              "q05": 1.0,
+              "q95": 1.0,
+              "q99": 1.0,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 1.5936288833618164,
+              "mean": 1.5936288833618164,
+              "median": 1.5936288833618164,
+              "minimum": 1.5936288833618164,
+              "q01": 1.5936288833618164,
+              "q05": 1.5936288833618164,
+              "q95": 1.5936288833618164,
+              "q99": 1.5936288833618164,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.30102041363716125,
+              "mean": 0.23260788635040322,
+              "median": 0.22959183156490326,
+              "minimum": 0.15433673560619354,
+              "q01": 0.1695280548930168,
+              "q05": 0.19132652878761292,
+              "q95": 0.27920916974544524,
+              "q99": 0.2934821519255638,
+              "std": 0.027166123441753127
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.41218796372413635,
+              "mean": 0.28329309813367826,
+              "median": 0.2789655327796936,
+              "minimum": 0.15334130823612213,
+              "q01": 0.18961896181106566,
+              "q05": 0.1989404484629631,
+              "q95": 0.37673736959695814,
+              "q99": 0.3924189984798432,
+              "std": 0.05142334691780375
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.89023357629776,
+              "mean": 0.789306910087665,
+              "median": 0.7868607640266418,
+              "minimum": 0.660141110420227,
+              "q01": 0.687888377904892,
+              "q05": 0.7133874237537384,
+              "q95": 0.8611820638179779,
+              "q99": 0.8845914727449418,
+              "std": 0.04468331255445695
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.19265204668045044,
+              "mean": 0.1555760499710838,
+              "median": 0.15600979328155518,
+              "minimum": 0.10260364413261414,
+              "q01": 0.1128183076530695,
+              "q05": 0.12916672378778457,
+              "q95": 0.17998460605740546,
+              "q99": 0.18772279351949692,
+              "std": 0.016122271844923704
+            }
+          },
+          "tuned_digit_like": true
+        }
+      },
+      "bright:beta=5": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": true,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 62.89788818359375,
+            "mean": 62.89788818359375,
+            "median": 62.89788818359375,
+            "minimum": 62.89788818359375,
+            "q01": 62.89788818359375,
+            "q05": 62.89788818359375,
+            "q95": 62.89788818359375,
+            "q99": 62.89788818359375,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 62.89788818359375,
+            "ci95_low": 62.89788818359375,
+            "count": 192,
+            "median": 62.89788818359375,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 4.651209831237793,
+            "mean": 2.7288481891155243,
+            "median": 2.6176748275756836,
+            "minimum": 1.6151065826416016,
+            "q01": 1.7880850625038147,
+            "q05": 1.9554770588874817,
+            "q95": 3.784362244606018,
+            "q99": 4.0663308334350585,
+            "std": 0.580350119634025
+          },
+          "tuned_median_interval": {
+            "ci95_high": 2.7838330268859863,
+            "ci95_low": 2.489668130874634,
+            "count": 192,
+            "median": 2.6176748275756836,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": false,
+          "tuned_q95_within_digit_manifold": true,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.3297916054725647,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.9983065128326416,
+            "tuned_predicted_class_count": 9
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "minimum": 1.0,
+              "q01": 1.0,
+              "q05": 1.0,
+              "q95": 1.0,
+              "q99": 1.0,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 1.5936288833618164,
+              "mean": 1.5936288833618164,
+              "median": 1.5936288833618164,
+              "minimum": 1.5936288833618164,
+              "q01": 1.5936288833618164,
+              "q05": 1.5936288833618164,
+              "q95": 1.5936288833618164,
+              "q99": 1.5936288833618164,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.2806122303009033,
+              "mean": 0.19678730851349732,
+              "median": 0.19515305757522583,
+              "minimum": 0.11862245202064514,
+              "q01": 0.13103316038846968,
+              "q05": 0.15121173709630967,
+              "q95": 0.2396683722734451,
+              "q99": 0.2640306055545807,
+              "std": 0.028179482315435694
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.3812533915042877,
+              "mean": 0.242421950524052,
+              "median": 0.24443764984607697,
+              "minimum": 0.12643419206142426,
+              "q01": 0.14202067017555237,
+              "q05": 0.17022521421313286,
+              "q95": 0.3144716069102287,
+              "q99": 0.34267932325601586,
+              "std": 0.04348631148895268
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.8630207777023315,
+              "mean": 0.712841285392642,
+              "median": 0.7142659425735474,
+              "minimum": 0.5248443484306335,
+              "q01": 0.5514209926128387,
+              "q05": 0.6215585052967072,
+              "q95": 0.7965004742145538,
+              "q99": 0.8289006149768829,
+              "std": 0.05961769790665322
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.19323010742664337,
+              "mean": 0.15128832939080894,
+              "median": 0.1520804911851883,
+              "minimum": 0.10517643392086029,
+              "q01": 0.10843251146376133,
+              "q05": 0.12851574420928955,
+              "q95": 0.17458589002490044,
+              "q99": 0.17971034213900566,
+              "std": 0.014512400813092881
+            }
+          },
+          "tuned_digit_like": true
+        }
+      },
+      "dark:beta=0.5": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": false,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 0.28470370173454285,
+            "mean": 0.28470370173454285,
+            "median": 0.28470370173454285,
+            "minimum": 0.28470370173454285,
+            "q01": 0.28470370173454285,
+            "q05": 0.28470370173454285,
+            "q95": 0.28470370173454285,
+            "q99": 0.28470370173454285,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 0.28470370173454285,
+            "ci95_low": 0.28470370173454285,
+            "count": 192,
+            "median": 0.28470370173454285,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 0.526928186416626,
+            "mean": 0.36123474640771747,
+            "median": 0.359056293964386,
+            "minimum": 0.28268009424209595,
+            "q01": 0.28433257013559343,
+            "q05": 0.2868207857012749,
+            "q95": 0.44558759927749625,
+            "q99": 0.4804219254851341,
+            "std": 0.05006062782444111
+          },
+          "tuned_median_interval": {
+            "ci95_high": 0.3697643280029297,
+            "ci95_low": 0.34573128819465637,
+            "count": 192,
+            "median": 0.359056293964386,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": false,
+          "tuned_q95_within_digit_manifold": true,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.3577534258365631,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.3250218331813812,
+            "tuned_predicted_class_count": 2
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.214215949177742,
+              "mean": 0.214215949177742,
+              "median": 0.214215949177742,
+              "minimum": 0.214215949177742,
+              "q01": 0.214215949177742,
+              "q05": 0.214215949177742,
+              "q95": 0.214215949177742,
+              "q99": 0.214215949177742,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.015306122601032257,
+              "mean": 0.00505553789116675,
+              "median": 0.005102040711790323,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.010204081423580647,
+              "q99": 0.012869898341596131,
+              "std": 0.003106227779580471
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.21360088884830475,
+              "mean": 0.20607571808310846,
+              "median": 0.20617380738258362,
+              "minimum": 0.19425635039806366,
+              "q01": 0.19660855129361152,
+              "q05": 0.1984730504453182,
+              "q95": 0.21231999173760413,
+              "q99": 0.21316980212926864,
+              "std": 0.003958881885958093
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.12914805114269257,
+              "mean": 0.06685330429900205,
+              "median": 0.07177820801734924,
+              "minimum": 0.007205369416624308,
+              "q01": 0.011090403543785215,
+              "q05": 0.016125543834641577,
+              "q95": 0.10776972286403178,
+              "q99": 0.11686223968863488,
+              "std": 0.027248224058050198
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.020940080285072327,
+              "mean": 0.010003916744608432,
+              "median": 0.009726108983159065,
+              "minimum": 0.0020850514993071556,
+              "q01": 0.0024386135349050166,
+              "q05": 0.003220796131063253,
+              "q95": 0.018251691851764906,
+              "q99": 0.019826310928910972,
+              "std": 0.004264430895104702
+            }
+          },
+          "tuned_digit_like": false
+        }
+      },
+      "dark:beta=1": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": false,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 0.28470370173454285,
+            "mean": 0.28470370173454285,
+            "median": 0.28470370173454285,
+            "minimum": 0.28470370173454285,
+            "q01": 0.28470370173454285,
+            "q05": 0.28470370173454285,
+            "q95": 0.28470370173454285,
+            "q99": 0.28470370173454285,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 0.28470370173454285,
+            "ci95_low": 0.28470370173454285,
+            "count": 192,
+            "median": 0.28470370173454285,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 1.9332623481750488,
+            "mean": 0.5611199884054562,
+            "median": 0.47208601236343384,
+            "minimum": 0.27809226512908936,
+            "q01": 0.29064963072538375,
+            "q05": 0.300675967335701,
+            "q95": 1.0380320370197291,
+            "q99": 1.521150798797609,
+            "std": 0.26585576668353245
+          },
+          "tuned_median_interval": {
+            "ci95_high": 0.5257200002670288,
+            "ci95_low": 0.44040441513061523,
+            "count": 192,
+            "median": 0.47208601236343384,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": false,
+          "tuned_q95_within_digit_manifold": true,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.3308996260166168,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.4112427532672882,
+            "tuned_predicted_class_count": 7
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.214215949177742,
+              "mean": 0.214215949177742,
+              "median": 0.214215949177742,
+              "minimum": 0.214215949177742,
+              "q01": 0.214215949177742,
+              "q05": 0.214215949177742,
+              "q95": 0.214215949177742,
+              "q99": 0.214215949177742,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.14923469722270966,
+              "mean": 0.027456686011646525,
+              "median": 0.020408162847161293,
+              "minimum": 0.0,
+              "q01": 0.0011607142619322987,
+              "q05": 0.0025510203558951616,
+              "q95": 0.07455357313156126,
+              "q99": 0.10991071470081812,
+              "std": 0.023619691077201774
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.20830771327018738,
+              "mean": 0.17762717181661478,
+              "median": 0.17958153784275055,
+              "minimum": 0.10125119239091873,
+              "q01": 0.13482950523495674,
+              "q05": 0.14859839230775834,
+              "q95": 0.20187958925962446,
+              "q99": 0.2069133159518242,
+              "std": 0.016666705285507087
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.49700212478637695,
+              "mean": 0.15629523070917153,
+              "median": 0.13935834169387817,
+              "minimum": 0.031119748950004578,
+              "q01": 0.03478061467409134,
+              "q05": 0.045384581014513974,
+              "q95": 0.3161967784166336,
+              "q99": 0.37090486615896257,
+              "std": 0.08159291741374786
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.12100216746330261,
+              "mean": 0.03550471405712111,
+              "median": 0.029878001660108566,
+              "minimum": 0.0046203723177313805,
+              "q01": 0.005667305793613195,
+              "q05": 0.008006574958562851,
+              "q95": 0.07889882177114486,
+              "q99": 0.0899805603921414,
+              "std": 0.021867618248461725
+            }
+          },
+          "tuned_digit_like": false
+        }
+      },
+      "dark:beta=2": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": false,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 0.28470370173454285,
+            "mean": 0.28470370173454285,
+            "median": 0.28470370173454285,
+            "minimum": 0.28470370173454285,
+            "q01": 0.28470370173454285,
+            "q05": 0.28470370173454285,
+            "q95": 0.28470370173454285,
+            "q99": 0.28470370173454285,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 0.28470370173454285,
+            "ci95_low": 0.28470370173454285,
+            "count": 192,
+            "median": 0.28470370173454285,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 2.551788806915283,
+            "mean": 1.2544956705532968,
+            "median": 1.2451190948486328,
+            "minimum": 0.4382731318473816,
+            "q01": 0.5033179578185082,
+            "q05": 0.6200228333473206,
+            "q95": 1.9578743815422053,
+            "q99": 2.3977108335494997,
+            "std": 0.41942475695666936
+          },
+          "tuned_median_interval": {
+            "ci95_high": 1.3316535949707031,
+            "ci95_low": 1.1537837982177734,
+            "count": 192,
+            "median": 1.2451190948486328,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": false,
+          "tuned_q95_within_digit_manifold": true,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.3191400468349457,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.7723955512046814,
+            "tuned_predicted_class_count": 10
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.214215949177742,
+              "mean": 0.214215949177742,
+              "median": 0.214215949177742,
+              "minimum": 0.214215949177742,
+              "q01": 0.214215949177742,
+              "q05": 0.214215949177742,
+              "q95": 0.214215949177742,
+              "q99": 0.214215949177742,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.2053571492433548,
+              "mean": 0.08794377100033064,
+              "median": 0.08418367058038712,
+              "minimum": 0.020408162847161293,
+              "q01": 0.021568878274410962,
+              "q05": 0.03641581758856773,
+              "q95": 0.15778061151504508,
+              "q99": 0.18853316277265553,
+              "std": 0.03637964830847858
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.28421786427497864,
+              "mean": 0.17063760082237422,
+              "median": 0.1682736724615097,
+              "minimum": 0.08163787424564362,
+              "q01": 0.10746119134128095,
+              "q05": 0.12849830314517022,
+              "q95": 0.22125780507922171,
+              "q99": 0.23563534647226336,
+              "std": 0.030260795727180073
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.6978252530097961,
+              "mean": 0.3653248919484516,
+              "median": 0.353304386138916,
+              "minimum": 0.15195582807064056,
+              "q01": 0.17189310520887374,
+              "q05": 0.20091855973005296,
+              "q95": 0.5631936788558959,
+              "q99": 0.6645625221729279,
+              "std": 0.1068925915639124
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.17090849578380585,
+              "mean": 0.09042206804345672,
+              "median": 0.09063636511564255,
+              "minimum": 0.0310346782207489,
+              "q01": 0.03396447639912367,
+              "q05": 0.04212703872472048,
+              "q95": 0.1340219222009182,
+              "q99": 0.1459591409564019,
+              "std": 0.027291406517386253
+            }
+          },
+          "tuned_digit_like": true
+        }
+      },
+      "dark:beta=5": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": false,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 0.28470370173454285,
+            "mean": 0.28470370173454285,
+            "median": 0.28470370173454285,
+            "minimum": 0.28470370173454285,
+            "q01": 0.28470370173454285,
+            "q05": 0.28470370173454285,
+            "q95": 0.28470370173454285,
+            "q99": 0.28470370173454285,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 0.28470370173454285,
+            "ci95_low": 0.28470370173454285,
+            "count": 192,
+            "median": 0.28470370173454285,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 3.297515869140625,
+            "mean": 1.9182938498755295,
+            "median": 1.895688772201538,
+            "minimum": 1.0162714719772339,
+            "q01": 1.0258303153514863,
+            "q05": 1.2091772854328156,
+            "q95": 2.7758591294288633,
+            "q99": 3.1321976566314698,
+            "std": 0.4701878495762495
+          },
+          "tuned_median_interval": {
+            "ci95_high": 1.9816322326660156,
+            "ci95_low": 1.7807594537734985,
+            "count": 192,
+            "median": 1.895688772201538,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": false,
+          "tuned_q95_within_digit_manifold": true,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.3429948091506958,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.9617050886154175,
+            "tuned_predicted_class_count": 10
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.214215949177742,
+              "mean": 0.214215949177742,
+              "median": 0.214215949177742,
+              "minimum": 0.214215949177742,
+              "q01": 0.214215949177742,
+              "q05": 0.214215949177742,
+              "q95": 0.214215949177742,
+              "q99": 0.214215949177742,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "minimum": 0.0,
+              "q01": 0.0,
+              "q05": 0.0,
+              "q95": 0.0,
+              "q99": 0.0,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.25255101919174194,
+              "mean": 0.1334834707668051,
+              "median": 0.1301020383834839,
+              "minimum": 0.04591836780309677,
+              "q01": 0.06992346584796906,
+              "q05": 0.07920918315649032,
+              "q95": 0.19700254648923873,
+              "q99": 0.21984693825244905,
+              "std": 0.034383156432839346
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.3555275499820709,
+              "mean": 0.1919764760726442,
+              "median": 0.19469590485095978,
+              "minimum": 0.08565212041139603,
+              "q01": 0.10841315090656281,
+              "q05": 0.12395021356642247,
+              "q95": 0.255301296710968,
+              "q99": 0.3065919852256775,
+              "std": 0.04191913033610773
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.7986025810241699,
+              "mean": 0.5210196537276109,
+              "median": 0.5175735950469971,
+              "minimum": 0.2713518738746643,
+              "q01": 0.33789592623710635,
+              "q05": 0.3758351504802704,
+              "q95": 0.6964749157428741,
+              "q99": 0.7528133773803711,
+              "std": 0.09409763486000823
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.17277278006076813,
+              "mean": 0.12670041744907698,
+              "median": 0.12674379348754883,
+              "minimum": 0.06477825343608856,
+              "q01": 0.07807036958634854,
+              "q05": 0.09004852920770645,
+              "q95": 0.15793820098042485,
+              "q99": 0.16879043713212014,
+              "std": 0.021316717483781163
+            }
+          },
+          "tuned_digit_like": true
+        }
+      },
+      "lower_half:beta=0.5": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": true,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 39.88964080810547,
+            "mean": 39.88964080810547,
+            "median": 39.88964080810547,
+            "minimum": 39.88964080810547,
+            "q01": 39.88964080810547,
+            "q05": 39.88964080810547,
+            "q95": 39.88964080810547,
+            "q99": 39.88964080810547,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 39.88964080810547,
+            "ci95_low": 39.88964080810547,
+            "count": 192,
+            "median": 39.88964080810547,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 12.830678939819336,
+            "mean": 9.322587996721268,
+            "median": 9.53162956237793,
+            "minimum": 6.94826078414917,
+            "q01": 7.1875739097595215,
+            "q05": 7.4567622423171995,
+            "q95": 11.328697872161865,
+            "q99": 11.837788305282594,
+            "std": 1.1561704071525551
+          },
+          "tuned_median_interval": {
+            "ci95_high": 9.648214340209961,
+            "ci95_low": 9.35289478302002,
+            "count": 192,
+            "median": 9.53162956237793,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": true,
+          "tuned_q95_within_digit_manifold": false,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.459250807762146,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.9804865121841431,
+            "tuned_predicted_class_count": 5
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.5,
+              "mean": 0.5,
+              "median": 0.5,
+              "minimum": 0.5,
+              "q01": 0.5,
+              "q05": 0.5,
+              "q95": 0.5,
+              "q99": 0.5,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 1.1648679971694946,
+              "mean": 1.1648679971694946,
+              "median": 1.1648679971694946,
+              "minimum": 1.1648679971694946,
+              "q01": 1.1648679971694946,
+              "q05": 1.1648679971694946,
+              "q95": 1.1648679971694946,
+              "q99": 1.1648679971694946,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "minimum": 1.0,
+              "q01": 1.0,
+              "q05": 1.0,
+              "q95": 1.0,
+              "q99": 1.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.03703703731298447,
+              "mean": 0.03703703731298447,
+              "median": 0.03703703731298447,
+              "minimum": 0.03703703731298447,
+              "q01": 0.03703703731298447,
+              "q05": 0.03703703731298447,
+              "q95": 0.03703703731298447,
+              "q99": 0.03703703731298447,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.37372449040412903,
+              "mean": 0.3028008070929597,
+              "median": 0.29209184646606445,
+              "minimum": 0.18877550959587097,
+              "q01": 0.20862245246768,
+              "q05": 0.25707907825708387,
+              "q95": 0.3628188833594322,
+              "q99": 0.37244898080825806,
+              "std": 0.03865046702827264
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.5303686261177063,
+              "mean": 0.46706306499739486,
+              "median": 0.4766889214515686,
+              "minimum": 0.36717262864112854,
+              "q01": 0.37537875831127165,
+              "q05": 0.38944520652294157,
+              "q95": 0.5202157467603683,
+              "q99": 0.5264488345384598,
+              "std": 0.04073123697607849
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.9347656965255737,
+              "mean": 0.868646338271598,
+              "median": 0.865458071231842,
+              "minimum": 0.698678731918335,
+              "q01": 0.7398387998342514,
+              "q05": 0.8174911051988601,
+              "q95": 0.9258679449558258,
+              "q99": 0.9311355859041214,
+              "std": 0.040774417393648815
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.2923315465450287,
+              "mean": 0.24781895227109393,
+              "median": 0.25555795431137085,
+              "minimum": 0.18786296248435974,
+              "q01": 0.19140186578035354,
+              "q05": 0.20224079340696335,
+              "q95": 0.2818280756473541,
+              "q99": 0.2867002713680267,
+              "std": 0.02565167613025564
+            }
+          },
+          "tuned_digit_like": false
+        }
+      },
+      "lower_half:beta=1": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": true,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 39.88964080810547,
+            "mean": 39.88964080810547,
+            "median": 39.88964080810547,
+            "minimum": 39.88964080810547,
+            "q01": 39.88964080810547,
+            "q05": 39.88964080810547,
+            "q95": 39.88964080810547,
+            "q99": 39.88964080810547,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 39.88964080810547,
+            "ci95_low": 39.88964080810547,
+            "count": 192,
+            "median": 39.88964080810547,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 9.90674877166748,
+            "mean": 7.164276041090488,
+            "median": 7.118297100067139,
+            "minimum": 4.303393363952637,
+            "q01": 5.063645119667053,
+            "q05": 5.569174790382386,
+            "q95": 8.781126737594604,
+            "q99": 9.319011735916138,
+            "std": 1.0944248499061071
+          },
+          "tuned_median_interval": {
+            "ci95_high": 7.33243989944458,
+            "ci95_low": 6.935854911804199,
+            "count": 192,
+            "median": 7.118297100067139,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": true,
+          "tuned_q95_within_digit_manifold": false,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.4361194968223572,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.9956193566322327,
+            "tuned_predicted_class_count": 6
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.5,
+              "mean": 0.5,
+              "median": 0.5,
+              "minimum": 0.5,
+              "q01": 0.5,
+              "q05": 0.5,
+              "q95": 0.5,
+              "q99": 0.5,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 1.1648679971694946,
+              "mean": 1.1648679971694946,
+              "median": 1.1648679971694946,
+              "minimum": 1.1648679971694946,
+              "q01": 1.1648679971694946,
+              "q05": 1.1648679971694946,
+              "q95": 1.1648679971694946,
+              "q99": 1.1648679971694946,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "minimum": 1.0,
+              "q01": 1.0,
+              "q05": 1.0,
+              "q95": 1.0,
+              "q99": 1.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.03703703731298447,
+              "mean": 0.03703703731298447,
+              "median": 0.03703703731298447,
+              "minimum": 0.03703703731298447,
+              "q01": 0.03703703731298447,
+              "q05": 0.03703703731298447,
+              "q95": 0.03703703731298447,
+              "q99": 0.03703703731298447,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.3609693944454193,
+              "mean": 0.27164381470841664,
+              "median": 0.2627550959587097,
+              "minimum": 0.13520407676696777,
+              "q01": 0.15109694123268128,
+              "q05": 0.17729592323303223,
+              "q95": 0.35459184646606445,
+              "q99": 0.35980868071317673,
+              "std": 0.05633376227024385
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.5194753408432007,
+              "mean": 0.3937393181646864,
+              "median": 0.3879723846912384,
+              "minimum": 0.27545294165611267,
+              "q01": 0.3076598557829857,
+              "q05": 0.328498837351799,
+              "q95": 0.45908564776182176,
+              "q99": 0.4931970170140267,
+              "std": 0.04340273542194305
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.9374380707740784,
+              "mean": 0.8153591578205427,
+              "median": 0.8086787462234497,
+              "minimum": 0.5765995383262634,
+              "q01": 0.6188151854276657,
+              "q05": 0.6516976356506348,
+              "q95": 0.9280156970024109,
+              "q99": 0.9340088003873825,
+              "std": 0.08331494304396987
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.2724851071834564,
+              "mean": 0.20739129414626709,
+              "median": 0.19739583134651184,
+              "minimum": 0.12494341284036636,
+              "q01": 0.1440834265947342,
+              "q05": 0.1621800795197487,
+              "q95": 0.2611900418996811,
+              "q99": 0.26813641756772993,
+              "std": 0.034452568644658614
+            }
+          },
+          "tuned_digit_like": false
+        }
+      },
+      "lower_half:beta=2": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": true,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 39.88964080810547,
+            "mean": 39.88964080810547,
+            "median": 39.88964080810547,
+            "minimum": 39.88964080810547,
+            "q01": 39.88964080810547,
+            "q05": 39.88964080810547,
+            "q95": 39.88964080810547,
+            "q99": 39.88964080810547,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 39.88964080810547,
+            "ci95_low": 39.88964080810547,
+            "count": 192,
+            "median": 39.88964080810547,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 7.301080703735352,
+            "mean": 4.2663994915783405,
+            "median": 4.080499649047852,
+            "minimum": 2.255594253540039,
+            "q01": 2.511040139198303,
+            "q05": 2.826649487018585,
+            "q95": 6.151418209075927,
+            "q99": 7.069915819168091,
+            "std": 1.067929148416104
+          },
+          "tuned_median_interval": {
+            "ci95_high": 4.340106010437012,
+            "ci95_low": 3.941664218902588,
+            "count": 192,
+            "median": 4.080499649047852,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": false,
+          "tuned_q95_within_digit_manifold": false,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.3873523771762848,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.9950510859489441,
+            "tuned_predicted_class_count": 8
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.5,
+              "mean": 0.5,
+              "median": 0.5,
+              "minimum": 0.5,
+              "q01": 0.5,
+              "q05": 0.5,
+              "q95": 0.5,
+              "q99": 0.5,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 1.1648679971694946,
+              "mean": 1.1648679971694946,
+              "median": 1.1648679971694946,
+              "minimum": 1.1648679971694946,
+              "q01": 1.1648679971694946,
+              "q05": 1.1648679971694946,
+              "q95": 1.1648679971694946,
+              "q99": 1.1648679971694946,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "minimum": 1.0,
+              "q01": 1.0,
+              "q05": 1.0,
+              "q95": 1.0,
+              "q99": 1.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.03703703731298447,
+              "mean": 0.03703703731298447,
+              "median": 0.03703703731298447,
+              "minimum": 0.03703703731298447,
+              "q01": 0.03703703731298447,
+              "q05": 0.03703703731298447,
+              "q95": 0.03703703731298447,
+              "q99": 0.03703703731298447,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.3469387888908386,
+              "mean": 0.22409119883862635,
+              "median": 0.22193877398967743,
+              "minimum": 0.1160714253783226,
+              "q01": 0.12303571455180645,
+              "q05": 0.1339285671710968,
+              "q95": 0.32315050512552257,
+              "q99": 0.3356887644529343,
+              "std": 0.062425013682068486
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.46341246366500854,
+              "mean": 0.3095179672042529,
+              "median": 0.305046021938324,
+              "minimum": 0.19788779318332672,
+              "q01": 0.22418995067477226,
+              "q05": 0.24547495767474176,
+              "q95": 0.38871400356292723,
+              "q99": 0.44114653468132026,
+              "std": 0.04698080811467053
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.9205814599990845,
+              "mean": 0.733275725816687,
+              "median": 0.7360069751739502,
+              "minimum": 0.5072277784347534,
+              "q01": 0.533320603966713,
+              "q05": 0.566089192032814,
+              "q95": 0.8983152270317077,
+              "q99": 0.91731010556221,
+              "std": 0.11138785569539901
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.23216256499290466,
+              "mean": 0.16579572394645462,
+              "median": 0.16630619764328003,
+              "minimum": 0.10852877795696259,
+              "q01": 0.10869474947452545,
+              "q05": 0.12145796194672585,
+              "q95": 0.21808850243687627,
+              "q99": 0.23041053235530853,
+              "std": 0.029028790401993305
+            }
+          },
+          "tuned_digit_like": true
+        }
+      },
+      "lower_half:beta=5": {
+        "one_class_pca_certificate": {
+          "baseline": {
+            "count": 192,
+            "maximum": 3.845791816711426,
+            "mean": 2.3437393767138324,
+            "median": 2.265900135040283,
+            "minimum": 1.1658469438552856,
+            "q01": 1.3303414118289947,
+            "q05": 1.5943270444869995,
+            "q95": 3.334222936630249,
+            "q99": 3.7091727733612063,
+            "std": 0.5220760716753384
+          },
+          "baseline_accepted": true,
+          "pixel_shuffled_real_control": {
+            "count": 1000,
+            "maximum": 24.303434371948242,
+            "mean": 10.95375062060356,
+            "median": 10.720956802368164,
+            "minimum": 2.951181411743164,
+            "q01": 3.989993965625763,
+            "q05": 5.4630952835083,
+            "q95": 17.41399564743042,
+            "q99": 21.062907733917235,
+            "std": 3.6198281295406822
+          },
+          "reward_maximizer_rejected": true,
+          "reward_maximizing_control": {
+            "count": 192,
+            "maximum": 39.88964080810547,
+            "mean": 39.88964080810547,
+            "median": 39.88964080810547,
+            "minimum": 39.88964080810547,
+            "q01": 39.88964080810547,
+            "q05": 39.88964080810547,
+            "q95": 39.88964080810547,
+            "q99": 39.88964080810547,
+            "std": 0.0
+          },
+          "reward_maximizing_control_median_interval": {
+            "ci95_high": 39.88964080810547,
+            "ci95_low": 39.88964080810547,
+            "count": 192,
+            "median": 39.88964080810547,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "threshold": 4.170980553627014,
+          "threshold_rule": "max(held-out-real q99, pretrained-baseline q95); tuned samples and controls excluded",
+          "tuned": {
+            "count": 192,
+            "maximum": 5.585524559020996,
+            "mean": 2.8467561521877847,
+            "median": 2.723822832107544,
+            "minimum": 1.1487524509429932,
+            "q01": 1.4480531430244445,
+            "q05": 1.8469871520996093,
+            "q95": 4.144986939430237,
+            "q99": 4.980011334419251,
+            "std": 0.726718565147928
+          },
+          "tuned_median_interval": {
+            "ci95_high": 2.8926918506622314,
+            "ci95_low": 2.619178295135498,
+            "count": 192,
+            "median": 2.723822832107544,
+            "method": "95% binomial-normal order-statistic interval for the population median"
+          },
+          "tuned_median_outside_digit_manifold": false,
+          "tuned_q95_within_digit_manifold": true,
+          "unseen_pixel_shuffle_rejected": true
+        },
+        "route_2_morphology_diagnostic_not_used_for_route_3": {
+          "classifier_diagnostics_not_used_for_acceptance": {
+            "legacy_feature_support_median": 0.3390989303588867,
+            "legacy_real_feature_support_q95": 0.4121478408575058,
+            "tuned_confidence_median": 0.9956249594688416,
+            "tuned_predicted_class_count": 10
+          },
+          "reward_maximizing_control": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.5,
+              "mean": 0.5,
+              "median": 0.5,
+              "minimum": 0.5,
+              "q01": 0.5,
+              "q05": 0.5,
+              "q95": 0.5,
+              "q99": 0.5,
+              "std": 0.0
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 1.1648679971694946,
+              "mean": 1.1648679971694946,
+              "median": 1.1648679971694946,
+              "minimum": 1.1648679971694946,
+              "q01": 1.1648679971694946,
+              "q05": 1.1648679971694946,
+              "q95": 1.1648679971694946,
+              "q99": 1.1648679971694946,
+              "std": 0.0
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 1.0,
+              "mean": 1.0,
+              "median": 1.0,
+              "minimum": 1.0,
+              "q01": 1.0,
+              "q05": 1.0,
+              "q95": 1.0,
+              "q99": 1.0,
+              "std": 0.0
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.03703703731298447,
+              "mean": 0.03703703731298447,
+              "median": 0.03703703731298447,
+              "minimum": 0.03703703731298447,
+              "q01": 0.03703703731298447,
+              "q05": 0.03703703731298447,
+              "q95": 0.03703703731298447,
+              "q99": 0.03703703731298447,
+              "std": 0.0
+            }
+          },
+          "reward_maximizing_control_digit_like": false,
+          "reward_maximizing_control_reward_maximal": true,
+          "thresholds_calibrated_without_tuned_samples": {
+            "multiscale_pixel_support_median_maximum": 0.3212825059890747,
+            "pixel_standard_deviation_median_minimum": 0.2957286238670349,
+            "total_variation_median_minimum": 0.06713870167732239
+          },
+          "tuned": {
+            "foreground_fraction": {
+              "count": 192,
+              "maximum": 0.2997449040412903,
+              "mean": 0.18160740829383334,
+              "median": 0.17984694242477417,
+              "minimum": 0.08801020681858063,
+              "q01": 0.09948979318141937,
+              "q05": 0.12059949189424515,
+              "q95": 0.25401785522699344,
+              "q99": 0.27434947818517685,
+              "std": 0.042716382363820804
+            },
+            "multiscale_pixel_support_distance": {
+              "count": 192,
+              "maximum": 0.35532230138778687,
+              "mean": 0.24093922173293927,
+              "median": 0.24156437814235687,
+              "minimum": 0.14120647311210632,
+              "q01": 0.15410870134830476,
+              "q05": 0.17890444546937942,
+              "q95": 0.3125746175646782,
+              "q99": 0.3510192656517029,
+              "std": 0.04090377166454395
+            },
+            "pixel_standard_deviation": {
+              "count": 192,
+              "maximum": 0.8881014585494995,
+              "mean": 0.6541089036812385,
+              "median": 0.6592882871627808,
+              "minimum": 0.41449764370918274,
+              "q01": 0.45487213879823685,
+              "q05": 0.5006809502840042,
+              "q95": 0.8144470751285552,
+              "q99": 0.8474842137098313,
+              "std": 0.09772555010210579
+            },
+            "total_variation": {
+              "count": 192,
+              "maximum": 0.20578701794147491,
+              "mean": 0.14819985663052648,
+              "median": 0.14831063151359558,
+              "minimum": 0.09461294114589691,
+              "q01": 0.09995263800024987,
+              "q05": 0.11021391451358795,
+              "q95": 0.18177723810076712,
+              "q99": 0.19378843918442726,
+              "std": 0.02110855681899851
+            }
+          },
+          "tuned_digit_like": true
+        }
+      }
+    },
+    "structure_checks": {
+      "bright:beta=0.5": false,
+      "bright:beta=1": false,
+      "bright:beta=2": false,
+      "bright:beta=5": true,
+      "dark:beta=0.5": false,
+      "dark:beta=1": false,
+      "dark:beta=2": false,
+      "dark:beta=5": false,
+      "lower_half:beta=0.5": false,
+      "lower_half:beta=1": false,
+      "lower_half:beta=2": false,
+      "lower_half:beta=5": true
+    },
+    "verdict": "FALSIFIED",
+    "verification_passed": false
+  },
+  "negative_control": {
+    "expected": "the every-cell fresh-reward improvement check fails",
+    "failed_for_intended_reason": true,
+    "name": "swap pretrained and tuned reward labels",
+    "observed_passed": false
+  },
+  "passed": true,
+  "verdict": "FALSIFIED"
+}

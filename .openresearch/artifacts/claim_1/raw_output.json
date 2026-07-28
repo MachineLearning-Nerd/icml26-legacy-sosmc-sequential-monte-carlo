@@ -1,0 +1,369 @@
+{
+  "claim": "Section 3.2 Algorithm 1 on the official 2D EBM",
+  "negative_controls": [
+    {
+      "expected": "the Algorithm 1 continuity contract fails",
+      "failed_for_intended_reason": true,
+      "name": "replace the carried population with a fresh population",
+      "observed_passed": false
+    },
+    {
+      "expected": "the Algorithm 1 continuity contract fails",
+      "failed_for_intended_reason": true,
+      "name": "replace the carried population with a fresh population",
+      "observed_passed": false
+    }
+  ],
+  "passed": true,
+  "trials": [
+    {
+      "independent_checker": {
+        "direct_checks": {
+          "checks": {
+            "at_least_three_consecutive_outer_iterations": true,
+            "candidate_weights_normalized_and_valid": true,
+            "exactly_one_ula_proposal_per_outer_iteration": true,
+            "independent_weighted_gradient_recomputation": true,
+            "nonuniform_candidate_weights_in_two_iterations": true,
+            "paired_reference_initialization_guarded": true,
+            "particle_population_carried_between_iterations": true
+          },
+          "continuity": [
+            true,
+            true
+          ],
+          "gradient_audit": [
+            {
+              "max_absolute_error": 0.0,
+              "max_absolute_tolerance": 3.792074858210981e-05,
+              "outer_iteration": 0,
+              "passed": true,
+              "relative_l2_error": 0.0,
+              "relative_l2_tolerance": 1e-06
+            },
+            {
+              "max_absolute_error": 1.519918441772461e-06,
+              "max_absolute_tolerance": 3.3945263567147776e-05,
+              "outer_iteration": 1,
+              "passed": true,
+              "relative_l2_error": 4.1646163140285353e-07,
+              "relative_l2_tolerance": 1e-06
+            },
+            {
+              "max_absolute_error": 2.60770320892334e-07,
+              "max_absolute_tolerance": 2.3749404135742225e-05,
+              "outer_iteration": 2,
+              "passed": true,
+              "relative_l2_error": 2.7661602075568226e-07,
+              "relative_l2_tolerance": 1e-06
+            }
+          ],
+          "gradient_tolerances": {
+            "accumulation_factor": 64.0,
+            "float32_epsilon": 1.1920928955078125e-07,
+            "max_absolute_rule": "max(1e-6, 64*float32_epsilon*max(1, actual_gradient_l2))",
+            "relative_l2": 1e-06
+          },
+          "nonuniform_iteration_count": 3,
+          "passed": true
+        },
+        "negative_control": {
+          "expected": "the Algorithm 1 continuity contract fails",
+          "failed_for_intended_reason": true,
+          "name": "replace the carried population with a fresh population",
+          "observed_passed": false
+        },
+        "passed": true,
+        "verdict": "VERIFIED"
+      },
+      "raw_trace": {
+        "gradient_checks": [
+          {
+            "actual_gradient_l2": 4.970348358154297,
+            "independent_formula": "sum_i w_i * ((r_i-E_w[r]) + beta*(delta_i-E_w[delta])) * grad_theta E_i",
+            "independent_gradient_l2": 4.970348358154297,
+            "max_absolute_error": 0.0,
+            "outer_iteration": 0,
+            "parameter_count": 50049,
+            "relative_l2_error": 0.0
+          },
+          {
+            "actual_gradient_l2": 4.449273586273193,
+            "independent_formula": "sum_i w_i * ((r_i-E_w[r]) + beta*(delta_i-E_w[delta])) * grad_theta E_i",
+            "independent_gradient_l2": 4.449273586273193,
+            "max_absolute_error": 1.519918441772461e-06,
+            "outer_iteration": 1,
+            "parameter_count": 50049,
+            "relative_l2_error": 4.1646163140285353e-07
+          },
+          {
+            "actual_gradient_l2": 3.112881898880005,
+            "independent_formula": "sum_i w_i * ((r_i-E_w[r]) + beta*(delta_i-E_w[delta])) * grad_theta E_i",
+            "independent_gradient_l2": 3.112881898880005,
+            "max_absolute_error": 2.60770320892334e-07,
+            "outer_iteration": 2,
+            "parameter_count": 50049,
+            "relative_l2_error": 2.7661602075568226e-07
+          }
+        ],
+        "implementation": "official SOSMCULARewardTuner from the vendored authors' 2D EBM notebook",
+        "iterations": [
+          {
+            "candidate_weights": {
+              "ess": 704.3383631182994,
+              "max": 0.025939030572772026,
+              "min": 1.7910733163262194e-07,
+              "std": 0.0003632867010310292,
+              "sum": 1.0
+            },
+            "outer_iteration": 0,
+            "post_log_weight_sha256": "e7e2dcff542de95352682dc186432e98f0188084896773f1973276b0577d5305",
+            "post_particle_sha256": "85bf37087961d8102d51efa85c74dc2dc454cdb93f57f5630fa7c23cd0d42f50",
+            "pre_log_weight_sha256": "e7e2dcff542de95352682dc186432e98f0188084896773f1973276b0577d5305",
+            "pre_particle_sha256": "b2daa4ca48144b7f8ed3f1f9101d54bfe87df56426e96735c855c1c1d8368d0c",
+            "pre_weights": {
+              "ess": 10000.000980217106,
+              "max": 9.999999747378752e-05,
+              "min": 9.999999747378752e-05,
+              "std": 3.637978807091713e-11,
+              "sum": 0.9999995827674866
+            },
+            "proposal_calls": 1,
+            "resampled": true
+          },
+          {
+            "candidate_weights": {
+              "ess": 7429.685228047232,
+              "max": 0.004251822829246521,
+              "min": 2.671671097687067e-07,
+              "std": 5.8817706303671e-05,
+              "sum": 0.9999999403953552
+            },
+            "outer_iteration": 1,
+            "post_log_weight_sha256": "e7e2dcff542de95352682dc186432e98f0188084896773f1973276b0577d5305",
+            "post_particle_sha256": "c3a8696ed5b8dc11c1b1bd43860f51f2b8e4cce5a88da9bf2c77967197b67d6d",
+            "pre_log_weight_sha256": "e7e2dcff542de95352682dc186432e98f0188084896773f1973276b0577d5305",
+            "pre_particle_sha256": "85bf37087961d8102d51efa85c74dc2dc454cdb93f57f5630fa7c23cd0d42f50",
+            "pre_weights": {
+              "ess": 10000.000980217106,
+              "max": 9.999999747378752e-05,
+              "min": 9.999999747378752e-05,
+              "std": 3.637978807091713e-11,
+              "sum": 0.9999995827674866
+            },
+            "proposal_calls": 1,
+            "resampled": true
+          },
+          {
+            "candidate_weights": {
+              "ess": 8205.601157820094,
+              "max": 0.0025822340976446867,
+              "min": 6.425748377836271e-09,
+              "std": 4.676313619711436e-05,
+              "sum": 1.0000003576278687
+            },
+            "outer_iteration": 2,
+            "post_log_weight_sha256": "e7e2dcff542de95352682dc186432e98f0188084896773f1973276b0577d5305",
+            "post_particle_sha256": "4138f9bd6712407e88252e717f4c95349d065d3435b9808f591527afb240e31d",
+            "pre_log_weight_sha256": "e7e2dcff542de95352682dc186432e98f0188084896773f1973276b0577d5305",
+            "pre_particle_sha256": "c3a8696ed5b8dc11c1b1bd43860f51f2b8e4cce5a88da9bf2c77967197b67d6d",
+            "pre_weights": {
+              "ess": 10000.000980217106,
+              "max": 9.999999747378752e-05,
+              "min": 9.999999747378752e-05,
+              "std": 3.637978807091713e-11,
+              "sum": 0.9999995827674866
+            },
+            "proposal_calls": 1,
+            "resampled": true
+          }
+        ],
+        "n_particles": 10000,
+        "official_notebook_sha256": "8b3938b65467238b07860caa071b7f3cb48eb5a77aab1a0292a32a0ee599c514",
+        "outer_iterations_configured": 1001,
+        "reference_initialization": {
+          "cache_hits": 3,
+          "cache_misses": 1,
+          "reference_parameters_bitwise_equal": true,
+          "sampler_configuration_equal": true
+        },
+        "upstream_commit": "62e4f8f07ae2705073388f5d2c4babf5c87b00be"
+      }
+    },
+    {
+      "independent_checker": {
+        "direct_checks": {
+          "checks": {
+            "at_least_three_consecutive_outer_iterations": true,
+            "candidate_weights_normalized_and_valid": true,
+            "exactly_one_ula_proposal_per_outer_iteration": true,
+            "independent_weighted_gradient_recomputation": true,
+            "nonuniform_candidate_weights_in_two_iterations": true,
+            "paired_reference_initialization_guarded": true,
+            "particle_population_carried_between_iterations": true
+          },
+          "continuity": [
+            true,
+            true
+          ],
+          "gradient_audit": [
+            {
+              "max_absolute_error": 0.0,
+              "max_absolute_tolerance": 3.792074858210981e-05,
+              "outer_iteration": 0,
+              "passed": true,
+              "relative_l2_error": 0.0,
+              "relative_l2_tolerance": 1e-06
+            },
+            {
+              "max_absolute_error": 3.1113624572753906e-05,
+              "max_absolute_tolerance": 0.000257955864071846,
+              "outer_iteration": 1,
+              "passed": true,
+              "relative_l2_error": 9.297506267103017e-07,
+              "relative_l2_tolerance": 1e-06
+            },
+            {
+              "max_absolute_error": 9.5367431640625e-07,
+              "max_absolute_tolerance": 0.0001424837828380987,
+              "outer_iteration": 2,
+              "passed": true,
+              "relative_l2_error": 1.2677723759679793e-07,
+              "relative_l2_tolerance": 1e-06
+            }
+          ],
+          "gradient_tolerances": {
+            "accumulation_factor": 64.0,
+            "float32_epsilon": 1.1920928955078125e-07,
+            "max_absolute_rule": "max(1e-6, 64*float32_epsilon*max(1, actual_gradient_l2))",
+            "relative_l2": 1e-06
+          },
+          "nonuniform_iteration_count": 3,
+          "passed": true
+        },
+        "negative_control": {
+          "expected": "the Algorithm 1 continuity contract fails",
+          "failed_for_intended_reason": true,
+          "name": "replace the carried population with a fresh population",
+          "observed_passed": false
+        },
+        "passed": true,
+        "verdict": "VERIFIED"
+      },
+      "raw_trace": {
+        "gradient_checks": [
+          {
+            "actual_gradient_l2": 4.970348358154297,
+            "independent_formula": "sum_i w_i * ((r_i-E_w[r]) + beta*(delta_i-E_w[delta])) * grad_theta E_i",
+            "independent_gradient_l2": 4.970348358154297,
+            "max_absolute_error": 0.0,
+            "outer_iteration": 0,
+            "parameter_count": 50049,
+            "relative_l2_error": 0.0
+          },
+          {
+            "actual_gradient_l2": 33.810791015625,
+            "independent_formula": "sum_i w_i * ((r_i-E_w[r]) + beta*(delta_i-E_w[delta])) * grad_theta E_i",
+            "independent_gradient_l2": 33.810794830322266,
+            "max_absolute_error": 3.1113624572753906e-05,
+            "outer_iteration": 1,
+            "parameter_count": 50049,
+            "relative_l2_error": 9.297506267103017e-07
+          },
+          {
+            "actual_gradient_l2": 18.675634384155273,
+            "independent_formula": "sum_i w_i * ((r_i-E_w[r]) + beta*(delta_i-E_w[delta])) * grad_theta E_i",
+            "independent_gradient_l2": 18.675634384155273,
+            "max_absolute_error": 9.5367431640625e-07,
+            "outer_iteration": 2,
+            "parameter_count": 50049,
+            "relative_l2_error": 1.2677723759679793e-07
+          }
+        ],
+        "implementation": "official SOSMCULARewardTuner from the vendored authors' 2D EBM notebook",
+        "iterations": [
+          {
+            "candidate_weights": {
+              "ess": 704.3383631182994,
+              "max": 0.025939030572772026,
+              "min": 1.7910733163262194e-07,
+              "std": 0.0003632867010310292,
+              "sum": 1.0
+            },
+            "outer_iteration": 0,
+            "post_log_weight_sha256": "e7e2dcff542de95352682dc186432e98f0188084896773f1973276b0577d5305",
+            "post_particle_sha256": "85bf37087961d8102d51efa85c74dc2dc454cdb93f57f5630fa7c23cd0d42f50",
+            "pre_log_weight_sha256": "e7e2dcff542de95352682dc186432e98f0188084896773f1973276b0577d5305",
+            "pre_particle_sha256": "b2daa4ca48144b7f8ed3f1f9101d54bfe87df56426e96735c855c1c1d8368d0c",
+            "pre_weights": {
+              "ess": 10000.000980217106,
+              "max": 9.999999747378752e-05,
+              "min": 9.999999747378752e-05,
+              "std": 3.637978807091713e-11,
+              "sum": 0.9999995827674866
+            },
+            "proposal_calls": 1,
+            "resampled": true
+          },
+          {
+            "candidate_weights": {
+              "ess": 6779.680961490783,
+              "max": 0.00254919845610857,
+              "min": 6.1607757118054e-08,
+              "std": 6.891992234159261e-05,
+              "sum": 1.0
+            },
+            "outer_iteration": 1,
+            "post_log_weight_sha256": "e7e2dcff542de95352682dc186432e98f0188084896773f1973276b0577d5305",
+            "post_particle_sha256": "c84f56a90bec7b6ca5aa37a6aad1d19c141bd10d31dceae0bdcca3da9026223e",
+            "pre_log_weight_sha256": "e7e2dcff542de95352682dc186432e98f0188084896773f1973276b0577d5305",
+            "pre_particle_sha256": "85bf37087961d8102d51efa85c74dc2dc454cdb93f57f5630fa7c23cd0d42f50",
+            "pre_weights": {
+              "ess": 10000.000980217106,
+              "max": 9.999999747378752e-05,
+              "min": 9.999999747378752e-05,
+              "std": 3.637978807091713e-11,
+              "sum": 0.9999995827674866
+            },
+            "proposal_calls": 1,
+            "resampled": true
+          },
+          {
+            "candidate_weights": {
+              "ess": 9396.594656917761,
+              "max": 0.0008854010957293212,
+              "min": 1.2675080540702766e-07,
+              "std": 2.5340770662296563e-05,
+              "sum": 0.9999998807907104
+            },
+            "outer_iteration": 2,
+            "post_log_weight_sha256": "db385e078c13738a99d4d46a21a4fc576d4bde648d4f4fea13172d19be7fc645",
+            "post_particle_sha256": "9e1d296e986cc249b317622ed193f03aa3ff2b8e32607e668be6de09b83b5ad2",
+            "pre_log_weight_sha256": "e7e2dcff542de95352682dc186432e98f0188084896773f1973276b0577d5305",
+            "pre_particle_sha256": "c84f56a90bec7b6ca5aa37a6aad1d19c141bd10d31dceae0bdcca3da9026223e",
+            "pre_weights": {
+              "ess": 10000.000980217106,
+              "max": 9.999999747378752e-05,
+              "min": 9.999999747378752e-05,
+              "std": 3.637978807091713e-11,
+              "sum": 0.9999995827674866
+            },
+            "proposal_calls": 1,
+            "resampled": false
+          }
+        ],
+        "n_particles": 10000,
+        "official_notebook_sha256": "8b3938b65467238b07860caa071b7f3cb48eb5a77aab1a0292a32a0ee599c514",
+        "outer_iterations_configured": 1001,
+        "reference_initialization": {
+          "cache_hits": 3,
+          "cache_misses": 1,
+          "reference_parameters_bitwise_equal": true,
+          "sampler_configuration_equal": true
+        },
+        "upstream_commit": "62e4f8f07ae2705073388f5d2c4babf5c87b00be"
+      }
+    }
+  ],
+  "verdict": "VERIFIED"
+}

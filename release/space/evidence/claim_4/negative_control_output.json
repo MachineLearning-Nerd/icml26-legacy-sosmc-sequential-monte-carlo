@@ -1,0 +1,9 @@
+{
+  "failed_as_intended": true,
+  "reversed_label_checks": {
+    "dual_hard": false,
+    "dual_smooth": false,
+    "sparse_hard": false,
+    "tight_tight": false
+  }
+}
