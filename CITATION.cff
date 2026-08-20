@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+title: "Legacy/source workspace for Efficient Stochastic Optimisation via Sequential Monte Carlo"
+type: software
+authors:
+  - family-names: Cuin
+    given-names: James
+  - family-names: Carbone
+    given-names: Davide
+  - family-names: Tang
+    given-names: Yanbo
+  - family-names: Akyildiz
+    given-names: O. Deniz
+repository-code: "https://github.com/MachineLearning-Nerd/icml26-legacy-sosmc-sequential-monte-carlo"
+url: "https://github.com/MachineLearning-Nerd/icml26-legacy-sosmc-sequential-monte-carlo"
+abstract: "Legacy/source workspace preserving the implementation, evidence artifacts, and branch history for the associated ICML 2026 reproduction record."
+keywords:
+  - reproduction
+  - ICML 2026
+references:
+  - type: article
+    title: "Efficient Stochastic Optimisation via Sequential Monte Carlo"
+    authors:
+      - family-names: Cuin
+        given-names: James
+      - family-names: Carbone
+        given-names: Davide
+      - family-names: Tang
+        given-names: Yanbo
+      - family-names: Akyildiz
+        given-names: O. Deniz
+    identifiers:
+      - type: arxiv
+        value: "2601.22003"
+    url: "https://arxiv.org/abs/2601.22003"
+

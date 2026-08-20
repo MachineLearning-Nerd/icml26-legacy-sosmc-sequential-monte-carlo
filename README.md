@@ -1,5 +1,30 @@
 # Efficient Stochastic Optimisation via Sequential Monte Carlo — reproduction
 
+## Collection classification and audit boundary
+
+This repository is a **legacy/source workspace** for *Efficient Stochastic Optimisation via Sequential Monte Carlo*
+(arXiv `2601.22003`, OpenReview `hCIBCAS1Hi`). It is preserved
+separately from the standardized canonical record at
+[`icml26-sosmc-sequential-monte-carlo`](https://github.com/MachineLearning-Nerd/icml26-sosmc-sequential-monte-carlo).
+
+The claim results and scores recorded below are historical results of this
+workspace. They are not new paper-level verifications performed while
+organizing the collection. The collection audit did not run the scientific
+implementation; the canonical record documents its own scoped status and
+limitations.
+
+### How the historical claim evidence is produced
+
+The claim table and experiment log below are the authoritative mapping from
+each paper claim to its producer, command, control, and evidence artifact. In
+this workspace, the SOSMC claim runners and independent checkers emit claim-specific raw outputs, controls, and `EVAL.md` artifacts under the committed report/logbook surfaces described in the experiment table.
+
+The former `orx/*` branches are historical workstreams, not additional final
+publication claims. Their purposes and tips are preserved in
+[`BRANCH_AUDIT.md`](BRANCH_AUDIT.md). Citation and author acknowledgment
+details are in [`CITATION.cff`](CITATION.cff) and
+[`AUTHOR_THANK_YOU.md`](AUTHOR_THANK_YOU.md).
+
 [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/MachineLearning-Nerd/icml26-repro-hCIBCAS1Hi-efficient-stochastic-optimisation-via-sequential-monte-carlo/blob/main/notebooks/sosmc_reproduction.py)
 
 This campaign tests all six judged claims from
